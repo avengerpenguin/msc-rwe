@@ -1,0 +1,74 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage{fullpage}
+
+\title{Proposal to explore the feasibility of improving BBC Search through the use of Linked Data}
+\author{Ross Fenning}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\section{Introduction}
+
+BBC Search is a online product that forms part of the BBC's online presence so
+that users can search for and navigate all areas of the BBC website using
+free text queries. This might aid visitors who are unable to find their desired
+content via other global or site-specific navigation or those who are simply
+looking for things that fall below the radar of the latest, greatest or
+otherwise promoted content.
+
+General-purpose search engines such as Google are also capable of directing
+users to BBC pages via free text queries, but there is a benefit the BBC
+can bring with its own search service that has greater knowlege of the
+BBC's own content. The BBC can use internal knowledge to predict a user's
+intent (if the query matches a programme title, then show links to watch
+the latest episode on iPlayer) or to provide editorially-curated
+links to significant pages (e.g. if a user searches for a term
+related to a major, ongoing news theme, curated links can always
+link to an overview or FAQ for that ongoing event for those
+looking for the background on it).
+
+\section{The Problem}
+
+The BBC Search service relies on a backend search engine to provide
+full-text querying, which provides pages of results in a manner not
+too dissimilar to Google. Internal BBC knowledge allows the results
+to be broken up into logical ``zones'', but those full-text results
+(sometimes referred to as the \emph{Organic Results} are matched
+on little more than traditional Information Retrieval ranking
+algorithms and linguistic techniques.
+
+The search pages are therefore augmented with features such as
+``Editor's Choice'' where text matching is done against a separate
+system to provide manually-curated ``best links'' for a given
+concept. This provides a useful bridge to recommended pages based
+on precise concepts the user might be seeking and gives the system
+the appearance of understanding that the user was seeking a
+particular concept rather than just pages that happen to contain
+the same text.
+
+For example, a search for ``manchester'' gives
+us an Editor's Choice link for the index page for Manchester local
+news within BBC News. This is a top link above any matches for pages
+that happen to mention Manchester.
+
+This is a good feature which could be compared to Google's
+``Knowledge Graph'', but falls short due to the need for all links
+to be curated by hand against a manually-constructed taxonomy of terms.
+
+The Editor's Choice feature is also limited only to matching a
+concept title to a recommended page link. There is no semantic
+representation of the given concept that might allow richer linking
+to multiple pages. For example, a search for an actor's name might
+provide a recommended profile page within an Editor's Choice system,
+but a deeper understanding of the person they are searching for might
+allow automatic aggregation of recent news mentioning that actor and
+all BBC programmes past and future in which they appear. Recommended
+and curated links could still form part of these links, but there
+is much that could be done with automatically linking entities and pages.
+
+\section{Proposal}
+
+\end{document}
