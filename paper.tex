@@ -1,0 +1,121 @@
+\documentclass[10pt,a4paper]{report}
+
+\title{}
+\author{Ross Fenning}
+
+\begin{document}
+
+\maketitle
+
+\chapter{Background}
+
+This report proposes improvements to the BBC Search product making use
+of \emph{Linked Data} \cite{} and/or the Semantic Web \cite{}. I hope
+to be able to demonstrate five tangible benefits this domain can
+bring to a search application, namely:
+
+\begin{enumerate}
+  \item Further decoupling of BBC applications, which aids scalability,
+    maintainability and resilience in many software architectures. \cite{}
+  \item Improvements to the search results page that help users determine
+    if the results given are relevant via so-called \emph{Rich Snippets}
+    that can automatically display some semantic information about a given
+    result without the need for manual curation.
+  \item User experience and design improvements to the search results
+    where semantic properties about the results can drive visual sugar
+    and calls to action, which can allow for a more flexible and
+    adaptable design without the need to enumerate all ``kinds'' with
+    different templates.
+  \item Removal of the manual curation of the ``Editor's Choice'' results
+    against a given query and replacing it with curated linked data that
+    can provide recommended content against queries in a more general
+    manner.
+  \item Replacement of the manual curation of autocomplete suggestions
+    in the \emph{Search Suggest} service -- that suggests full text queries
+    as the user types -- with suggestions driven from linked data.
+\end{enumerate}
+
+In the rest of this chapter, I will give an overview of what role BBC
+Search plays and how we can usefully view the system as a whole as four
+distinct subsystems. In later chapters we can then look to improve these
+four separate systems one at a time and then evaluate how these improvements
+might complement each other.
+
+\section{BBC Search}
+
+BBC Search is an online product that forms part of the BBC website
+to enable users to search for and navigate all areas of the site using
+free-text queries. This might aid visitors who are unable to find their desired
+content via other global or site-specific navigation or those who are simply
+looking for things that fall below the radar of the latest, greatest or
+otherwise promoted content.
+
+General-purpose search engines such as Google are also capable of directing
+users to BBC pages via free text queries, but there is a benefit the BBC
+can bring with its own search service that has greater knowlege of the
+BBC's own content. The BBC can use internal knowledge to predict a user's
+intent (e.g. if the query matches a programme title, then show links to watch
+the latest episode on iPlayer) or to provide editorially-curated
+links to significant pages (e.g. if a user searches for a term
+related to a major, ongoing news theme, curated links can
+link to an overview or FAQ for that ongoing event for those
+looking for the background on it).
+
+It is well established that a classical information retrieval system
+can be expressed as two sets of computation: processing of information
+into indexes (also known as \emph{indexing}) for quicker retrieval
+and the retrieval of documents from those indexes based on a user's
+query. These can be known as \emph{index time} or \emph{query time}
+processing respectively.
+
+The general strategy is to perform
+any expensive transformation, expansion or ordering of the indexed
+at index time so that query time algorithms may be optimised to
+run as quickly as possible. This is an approach that has only
+increased in importance as information retrieval systems have moved
+from standalone systems (e.g. a catalogue search situated within
+a library used by a handful of users at once) to web-based
+searches across a far larger corpus with tens or even hundreds of
+users submitting queries in a single second.
+
+In the remaining sections of this chapter, I outline the considerations
+around these two sides of the search application in addition to the
+two complementary systems known as \emph{Editor's Choice} and
+\emph{Search Suggest}.
+
+\section{Indexing Content}
+
+The Search application needs to read in or receive metadata about
+BBC content from a variety of sources and then needs to serve
+a diverse set of use cases. \cite{fenning2014applicability} The
+need to integrate against different data sources and funnel
+that information into a common set of search indexes can
+typically be seen as an \emph{enterprise integration}
+problem. Architectural patterns have been developed, tested and
+implemented in a large number of enterprises to synchronise,
+transform and normalise data. Such patterns are notably
+summarised by Hohpe and Woolf\cite{hohpe2004enterprise}.
+
+In more recent years, a growing trend has emerged to use
+\emph{Linked Data} in the enterprise to remove the need
+for repeated integration projects or data warehousing.
+\cite{allemang2010semantic}
+
+\section{Retrieving Content}
+
+\section{Curation}
+
+\chapter{State of the Art in Linked Data}
+
+\chapter{Analysis}
+
+\chapter{Proposal}
+
+\chapter{Implementation Plan}
+
+\chapter{Summary}
+
+\bibliographystyle{cell}
+\bibliography{bibtex}
+
+\end{document}
