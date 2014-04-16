@@ -1,6 +1,6 @@
 \documentclass[10pt,a4paper]{report}
 
-\title{}
+\title{Proposal to improve BBC Search through the use of Linked Data}
 \author{Ross Fenning}
 
 \begin{document}
@@ -96,16 +96,64 @@ implemented in a large number of enterprises to synchronise,
 transform and normalise data. Such patterns are notably
 summarised by Hohpe and Woolf\cite{hohpe2004enterprise}.
 
-In more recent years, a growing trend has emerged to use
-\emph{Linked Data} in the enterprise to remove the need
-for repeated integration projects or data warehousing.
-\cite{allemang2010semantic}
+Some of the data is fairly flat, textual content such as articles and some
+information -- such as programmes -- is very structured (e.g. programmes,
+series, episodes, times of broadcast, channel on which they are broadcast,
+what times they are available to watch on iPlayer, what kinds of devices
+are permitted by rights to watch them on iPlayer). This has challenges
+for providing a consistent and meaningful user experience across such
+a heterogenous mix of content.
+
+% Do we need this?
+Concepts central to the information retrieval domain such as creating
+tokenisation, stemming, lemmatisation and relevance
+algorithms can normally be delgated to
+third party proprietary or free software. It is still useful however
+for developers of full search application to be aware of these concepts even
+if their implementation is abstracted away. Tokenisation, stemming and
+lemmatisation are index time concerns, the full definitions of which
+are out of scope for this report. In short, we want a search application
+to understand individual words within an article and to understand that, for
+example, ``mice'' and ``mouse'' are approximately the same word as well
+as verb forms like ``swim'', ``swam'', ``swum'' and ``swimming'' all being
+equivalent in the context of keyword retrieval.
 
 \section{Retrieving Content}
 
-\section{Curation}
+
+\section{Editor's Choice}
+
+\section{Search Suggest}
 
 \chapter{State of the Art in Linked Data}
+
+\section{Linked Enterprise Data}
+
+In recent years, a growing trend has emerged to use
+\emph{Linked Data} in the enterprise to remove the need
+for repeated integration projects or data warehousing.
+\cite{allemang2010semantic} If we view the indexing processes
+of a search application as a variant of data warehousing,
+we can start to argue for enterprise-wide publishing of
+linked data as a more cost effective means of building search
+indexes over bespoke integration efforts.
+
+An important consideration is that BBC Search is largely directing
+users to public pages on the BBC website, a large number of which have
+already published some of their metadata as linked data. Notably, BBC News,
+BBC Sport and BBC Food all use some combination
+of microformats, microdata, RDFa, HTML meta tags within their HTML content
+pages. Some of this was to improve search results in external search engines
+such as Google and some of it ties into Facebook's Open Graph Protocol, which
+enables and enhances social media sharing of the pages.
+
+These efforts are not as structured and rich as the more notable uses
+of semantic web technologies on the programmes microsites, Nature and BBC
+Music \cite{}, but indicate that some level of metadata can be retrieved
+as linked data. In cases where the metadata are rich enough, it might be
+possible to avoid direct integration with databases, hidden back end
+web services and other structured ``feeds'' typically set up for enterprise
+integration.
 
 \chapter{Analysis}
 
