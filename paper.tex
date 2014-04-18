@@ -10,9 +10,9 @@
 \chapter{Background}
 
 This report proposes improvements to the BBC Search product making use
-of \emph{Linked Data} \cite{} and/or the Semantic Web \cite{}. I hope
-to be able to demonstrate five tangible benefits this domain can
-bring to a search application, namely:
+of \emph{Linked Data} \cite{bizer2009linked} and/or the Semantic Web
+\cite{berners2001semantic}. I hope to be able to demonstrate five tangible
+benefits this domain can bring to a search application, namely:
 
 \begin{enumerate}
   \item Further decoupling of BBC applications, which aids scalability,
@@ -36,7 +36,7 @@ bring to a search application, namely:
 \end{enumerate}
 
 In the rest of this chapter, I will give an overview of what role BBC
-Search plays and how we can usefully view the system as a whole as four
+Search plays and how we can usefully view the system as four
 distinct subsystems. In later chapters we can then look to improve these
 four separate systems one at a time and then evaluate how these improvements
 might complement each other.
@@ -52,7 +52,7 @@ otherwise promoted content.
 
 General-purpose search engines such as Google are also capable of directing
 users to BBC pages via free text queries, but there is a benefit the BBC
-can bring with its own search service that has greater knowlege of the
+can bring with its own search service that has greater knowledge of the
 BBC's own content. The BBC can use internal knowledge to predict a user's
 intent (e.g. if the query matches a programme title, then show links to watch
 the latest episode on iPlayer) or to provide editorially-curated
@@ -102,12 +102,27 @@ series, episodes, times of broadcast, channel on which they are broadcast,
 what times they are available to watch on iPlayer, what kinds of devices
 are permitted by rights to watch them on iPlayer). This has challenges
 for providing a consistent and meaningful user experience across such
-a heterogenous mix of content.
+a heterogeneous mix of content.
+
+We can achieve some uniformity of the data by building a single, common
+API through which all content is fed into the Search application. However,
+it varies based on practicalities whether
+work is done by the owners of the content to send content to the API
+or whether the developers of the Search application need to integrate
+existing feeds via an adapter pattern. Some pages on the BBC website no
+longer have a dedicated team maintaining them and can sometimes only
+be discovered via a web crawl as an external search engine would do. A lot
+of metadata about content also lives in a diverse range of databases and
+content management systems, which can be collectively described as part
+of the so-called \emph{deep web}. \cite{}
+
+In chapter~\ref{stateoftheart}, we will discuss how the deep web is one
+problem the linked data domain seeks to solve.
 
 % Do we need this?
 Concepts central to the information retrieval domain such as creating
 tokenisation, stemming, lemmatisation and relevance
-algorithms can normally be delgated to
+algorithms can normally be delegated to
 third party proprietary or free software. It is still useful however
 for developers of full search application to be aware of these concepts even
 if their implementation is abstracted away. Tokenisation, stemming and
@@ -120,12 +135,91 @@ equivalent in the context of keyword retrieval.
 
 \section{Retrieving Content}
 
+Once we have constructed an index optimised for keyword-based retrieval,
+we can begin to run queries against that index. A retrieval problem
+can be summarised as trying to maximise two separate measures: \emph{precision}
+and \emph{recall}, where:
+
+\begin{equation}
+  precision = \quot{|{relevant documents}\and{retrieved documents}|}{|{retrieved documents}|}
+\end{equation}
+
+\begin{equation}
+  recall = \quot{|{relevant documents}\and{retrieved documents}|}{|{relevant documents}|}
+\end{equation}
+
+Namely, precision is the fraction of the retrieved documents that were
+relevant to the user's query and recall is the fraction of documents out of
+all possible, relevant documents that appear in the search results.
+
+Note that a system could trivially maximise recall by always returning all
+results, but such a system would perform poorly in terms of precision. A
+measure known as \emph{F-measure} was derived by van Rijsbergen \cite{} which
+balances precision recall based on preferring recall over precision \beta
+times:
+
+% TODO: equation
+
+There are other measures such as average precision and average mean precision
+that take into account ordering of results and the average over multiple
+queries respectively. A successful algorithm or third party search engine
+application can be evaluated quantitatively by these measures and more. A more
+qualitatively summary from the perspective of the end users could be:
+
+\begin{quote}
+A successful search application will return only the content the user wants
+(precision) --
+as high up the results list as possible -- and as much of desired content
+as possible (recall).
+\end{quote}
+
+The set of all documents that could be retrieved by a query is known as the
+\emph{corpus} and search systems will typically apply a \emph{score} against
+each that gives some measure of confidence of the relevance of each document
+given a particular query. It should be noted that scores are a relative
+metric only and only have meaning within the context of a particular
+retrieval algorithm and particular query.
 
 \section{Editor's Choice}
 
+The current BBC Search application returns an ordered list of results
+for queries based on keyword matching within the titles, text or other
+chosen metadata fields as appropriate. However, there are cases where
+the algorithms employed may not return something noted as the official
+or canonical match for a concept, person, programme, etc. (e.g. the
+official microsite for a popular BBC programme or a profile page for
+a notable person on BBC News).
+
+Editorial staff thus have control over a curation system that manifests
+as an \emph{Editor's Choice} feature that will ensure the top one to three
+results for popular queries link to manually-chosen pages deemed as the most
+relevant pages for those queries. For instance, a search for a city such
+as Coventry might naturally return recent news articles that mention the
+city (since news results are biased towards more recent articles over older
+ones), but the Editor's Choice links on top of the so-called \emph{organic
+results} can persistently offer users links for common use cases such as
+the BBC Weather page for Coventry.
+
+Each and every link promoted within this feature is hand-chosen by editorial
+staff and much manual effort is needed to keep promoting new concepts
+as they appear and to remove pages as they get superseded. It is hoped
+in this proposal we can reduce some of that manual curation through the use
+of linked data and demonstrate ways editorial staff can focus on curating
+their own linked data such that Editor's Choice could evolve into a more
+generalised and automated subsystem. A metadata-driven curation system
+could use common patterns in the data to promote orders of magnitude more
+top links with a fraction of the current effort.
+
 \section{Search Suggest}
 
+One challenge for the querying of a search application is to be tolerant
+of variable quality of user-entered queries. Many users of web search
+engines may give ambiguously short queries, overly long queries with (where
+it can be hard for a machine to pick out the important keywords amongst
+less important words or stop words) or simply use incorrect spelling.
+
 \chapter{State of the Art in Linked Data}
+\label{stateoftheart}
 
 \section{Linked Enterprise Data}
 
