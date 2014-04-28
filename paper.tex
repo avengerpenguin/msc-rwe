@@ -1,5 +1,7 @@
 \documentclass[10pt,a4paper]{report}
 
+\usepackage{mathtools}
+
 \title{Proposal to improve BBC Search through the use of Linked Data}
 \author{Ross Fenning}
 
@@ -10,19 +12,20 @@
 \chapter{Background}
 
 This report proposes improvements to the BBC Search product making use
-of \emph{Linked Data} \cite{bizer2009linked} and/or the Semantic Web
-\cite{berners2001semantic}. I hope to be able to demonstrate five tangible
+of \emph{Linked Data}\cite{bizer2009linked} and/or the Semantic
+Web\cite{berners2001semantic}. I hope to be able to demonstrate five tangible
 benefits this domain can bring to a search application, namely:
 
 \begin{enumerate}
   \item Further decoupling of BBC applications, which aids scalability,
-    maintainability and resilience in many software architectures. \cite{}
+    maintainability and resilience in many software architectures.\cite{}
   \item Improvements to the search results page that help users determine
-    if the results given are relevant via so-called \emph{Rich Snippets}
+    if the results given are relevant via so-called
+    \emph{Rich Snippets}\cite{goel2009introducing}
     that can automatically display some semantic information about a given
     result without the need for manual curation.
   \item User experience and design improvements to the search results
-    where semantic properties about the results can drive visual sugar
+    where semantic properties about the results can drive visual decoration
     and calls to action, which can allow for a more flexible and
     adaptable design without the need to enumerate all ``kinds'' with
     different templates.
@@ -45,7 +48,7 @@ might complement each other.
 
 BBC Search is an online product that forms part of the BBC website
 to enable users to search for and navigate all areas of the site using
-free-text queries. This might aid visitors who are unable to find their desired
+free text queries. This might aid visitors who are unable to find their desired
 content via other global or site-specific navigation or those who are simply
 looking for things that fall below the radar of the latest, greatest or
 otherwise promoted content.
@@ -69,7 +72,7 @@ query. These can be known as \emph{index time} or \emph{query time}
 processing respectively.
 
 The general strategy is to perform
-any expensive transformation, expansion or ordering of the indexed
+any expensive transformation, expansion or ordering of data
 at index time so that query time algorithms may be optimised to
 run as quickly as possible. This is an approach that has only
 increased in importance as information retrieval systems have moved
@@ -87,51 +90,39 @@ two complementary systems known as \emph{Editor's Choice} and
 
 The Search application needs to read in or receive metadata about
 BBC content from a variety of sources and then needs to serve
-a diverse set of use cases. \cite{fenning2014applicability} The
+a diverse set of use cases.\cite{fenning2014applicability} The
 need to integrate against different data sources and funnel
 that information into a common set of search indexes can
 typically be seen as an \emph{enterprise integration}
 problem. Architectural patterns have been developed, tested and
 implemented in a large number of enterprises to synchronise,
 transform and normalise data. Such patterns are notably
-summarised by Hohpe and Woolf\cite{hohpe2004enterprise}.
+summarised by Hohpe and Woolf.\cite{hohpe2004enterprise}
 
 Some of the data is fairly flat, textual content such as articles and some
 information -- such as programmes -- is very structured (e.g. programmes,
 series, episodes, times of broadcast, channel on which they are broadcast,
 what times they are available to watch on iPlayer, what kinds of devices
-are permitted by rights to watch them on iPlayer). This has challenges
-for providing a consistent and meaningful user experience across such
+are permitted by rights to watch them on iPlayer). There are challenges
+in providing a consistent and meaningful user experience across such
 a heterogeneous mix of content.
 
 We can achieve some uniformity of the data by building a single, common
 API through which all content is fed into the Search application. However,
-it varies based on practicalities whether
-work is done by the owners of the content to send content to the API
-or whether the developers of the Search application need to integrate
-existing feeds via an adapter pattern. Some pages on the BBC website no
+some integration work needs to be
+done by either the owners of the content to send content to the API
+or the developers of the Search application, who can integrate
+existing feeds via an adapter pattern.
+
+Some pages on the BBC website no
 longer have a dedicated team maintaining them and can sometimes only
 be discovered via a web crawl as an external search engine would do. A lot
 of metadata about content also lives in a diverse range of databases and
 content management systems, which can be collectively described as part
-of the so-called \emph{deep web}. \cite{}
+of the so-called \emph{deep web}.\cite{}
 
 In chapter~\ref{stateoftheart}, we will discuss how the deep web is one
 problem the linked data domain seeks to solve.
-
-% Do we need this?
-Concepts central to the information retrieval domain such as creating
-tokenisation, stemming, lemmatisation and relevance
-algorithms can normally be delegated to
-third party proprietary or free software. It is still useful however
-for developers of full search application to be aware of these concepts even
-if their implementation is abstracted away. Tokenisation, stemming and
-lemmatisation are index time concerns, the full definitions of which
-are out of scope for this report. In short, we want a search application
-to understand individual words within an article and to understand that, for
-example, ``mice'' and ``mouse'' are approximately the same word as well
-as verb forms like ``swim'', ``swam'', ``swum'' and ``swimming'' all being
-equivalent in the context of keyword retrieval.
 
 \section{Retrieving Content}
 
@@ -140,13 +131,21 @@ we can begin to run queries against that index. A retrieval problem
 can be summarised as trying to maximise two separate measures: \emph{precision}
 and \emph{recall}, where:
 
-\begin{equation}
-  precision = \quot{|{relevant documents}\and{retrieved documents}|}{|{retrieved documents}|}
-\end{equation}
+\begin{displaymath}
+  \textbf{precision} = \frac{
+    |\text{relevant documents} \cap \text{retrieved documents}|
+  }{
+    |\text{retrieved documents}|
+  }
+\end{displaymath}
 
-\begin{equation}
-  recall = \quot{|{relevant documents}\and{retrieved documents}|}{|{relevant documents}|}
-\end{equation}
+\begin{displaymath}
+  \textbf{recall} = \frac{
+    |{relevant documents} \cap \text{retrieved documents}|
+  }{
+    |\text{relevant documents}|
+  }
+\end{displaymath}
 
 Namely, precision is the fraction of the retrieved documents that were
 relevant to the user's query and recall is the fraction of documents out of
@@ -154,17 +153,18 @@ all possible, relevant documents that appear in the search results.
 
 Note that a system could trivially maximise recall by always returning all
 results, but such a system would perform poorly in terms of precision. A
-measure known as \emph{F-measure} was derived by van Rijsbergen \cite{} which
-balances precision recall based on preferring recall over precision \beta
+measure known as \emph{F-measure} was derived by van Rijsbergen
+\cite{rijsbergen1979information} which
+balances precision recall based on preferring recall over precision $\beta$
 times:
 
-% TODO: equation
+$$F_\beta = (1 + \beta^2) \cdot \frac{\mathrm{precision} \cdot \mathrm{recall} }{ \beta^2 \cdot \mathrm{precision} + \mathrm{recall}}$$
 
 There are other measures such as average precision and average mean precision
 that take into account ordering of results and the average over multiple
 queries respectively. A successful algorithm or third party search engine
 application can be evaluated quantitatively by these measures and more. A more
-qualitatively summary from the perspective of the end users could be:
+qualitative summary from the perspective of the end users could be:
 
 \begin{quote}
 A successful search application will return only the content the user wants
@@ -194,10 +194,10 @@ Editorial staff thus have control over a curation system that manifests
 as an \emph{Editor's Choice} feature that will ensure the top one to three
 results for popular queries link to manually-chosen pages deemed as the most
 relevant pages for those queries. For instance, a search for a city such
-as Coventry might naturally return recent news articles that mention the
+as \emph{Coventry} might naturally return recent news articles that mention the
 city (since news results are biased towards more recent articles over older
 ones), but the Editor's Choice links on top of the so-called \emph{organic
-results} can persistently offer users links for common use cases such as
+results} can persistently offer links for common use cases such as
 the BBC Weather page for Coventry.
 
 Each and every link promoted within this feature is hand-chosen by editorial
@@ -213,13 +213,72 @@ top links with a fraction of the current effort.
 \section{Search Suggest}
 
 One challenge for the querying of a search application is to be tolerant
-of variable quality of user-entered queries. Many users of web search
+of the variable quality of user-entered queries. Many users of web search
 engines may give ambiguously short queries, overly long queries with (where
 it can be hard for a machine to pick out the important keywords amongst
-less important words or stop words) or simply use incorrect spelling.
+less important words or stop words\cite{rajaraman2011data})
+or simply use incorrect spelling.
 
-\chapter{State of the Art in Linked Data}
+This problem can be ameliorated with a plethora of algorithm
+server-side solutions (e.g. spell checking), but a simple solution that
+can be implemented on the user interface is an \emph{autocomplete}
+or \emph{autosuggest} feature. The former prompts for potential
+queries, titles, names, etc. that they may be typing so as to prevent
+the need to type the query out in full. The latter feature can go
+further to suggest onwards journeys that bypass the need for a
+page of search results altogether.
+
+The search box for BBC Search implements an autocomplete
+feature -- known
+as \emph{Search Suggest} -- whereby
+the full names or titles of are suggested to users as they type the first
+few characters of their queries. This helps guide users into free text
+queries that are more likely to match terms in the indexes and reduces
+mismatching due to misspellings or otherwise poorly-formed queries.
+
+The list of suggestions that might surface in this system are
+currently chosen and maintained by hand by editorial staff. If a new
+concept breaks into the news (such as a notable person becoming notable
+for the first time), then a person must enter that term into the system.
+Similarly, if something should not be suggested to users any longer
+(perhaps for legal reasons or simply because it is no longer a relevant
+concept), then it must be amended or removed manually.
+
+This manual maintenance of the suggestion list also leads to a
+disconnect between searchable content and suggested queries that might
+appear as users type. There is an onus on editorial staff to ensure
+that content will be found when a suggested query is used. It might
+serve the website users better to find mechanisms by which to generate
+a useful set of suggestions from the corpus of content as it is
+indexed. The heterogenous nature of BBC content turns this into
+further integration work where different business rules are likely required
+to generate suggestions from different types of content.
+
+In chapter~\ref{stateoftheart} I will briefly outline some of the state of the
+art in the Linked Data domain and start to highlight areas that show
+the most promise for improving the four areas of the search application
+described in this chapter.
+
+
+\chapter{Linked Data}
 \label{stateoftheart}
+
+\section{Linked Data Principles}
+
+The concept of Linked Data can well be summarised as a representation of
+data that follows four principles:\cite{berners2011linked}
+
+\begin{enumerate}
+  \item Use URIs to denote things.
+  \item Prefer HTTP URIs (i.e. URLs) so that these things can be looked
+    up (i.e. \emph{dereferenced}.
+  \item When these URIs are dereferenced, provide useful information about
+    those things using standards.
+  \item Include links to other things (using their URIs) when such
+    information is published on the web.
+\end{enumerate}
+
+
 
 \section{Linked Enterprise Data}
 
@@ -257,7 +316,7 @@ integration.
 
 \chapter{Summary}
 
-\bibliographystyle{cell}
+\bibliographystyle{plain}
 \bibliography{bibtex}
 
 \end{document}
