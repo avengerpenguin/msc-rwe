@@ -158,7 +158,9 @@ measure known as \emph{F-measure} was derived by van Rijsbergen
 balances precision recall based on preferring recall over precision $\beta$
 times:
 
-$$F_\beta = (1 + \beta^2) \cdot \frac{\mathrm{precision} \cdot \mathrm{recall} }{ \beta^2 \cdot \mathrm{precision} + \mathrm{recall}}$$
+\begin{displaymath}
+  F_\beta = (1 + \beta^2) \cdot \frac{\mathrm{precision} \cdot \mathrm{recall} }{ \beta^2 \cdot \mathrm{precision} + \mathrm{recall}}
+\end{displaymath}
 
 There are other measures such as average precision and average mean precision
 that take into account ordering of results and the average over multiple
@@ -167,10 +169,10 @@ application can be evaluated quantitatively by these measures and more. A more
 qualitative summary from the perspective of the end users could be:
 
 \begin{quote}
-A successful search application will return only the content the user wants
-(precision) --
-as high up the results list as possible -- and as much of desired content
-as possible (recall).
+  A successful search application will return only the content the user wants
+  (precision) --
+  as high up the results list as possible -- and as much of desired content
+  as possible (recall).
 \end{quote}
 
 The set of all documents that could be retrieved by a query is known as the
@@ -263,8 +265,6 @@ described in this chapter.
 \chapter{Linked Data}
 \label{stateoftheart}
 
-\section{Linked Data Principles}
-
 The concept of Linked Data can well be summarised as a representation of
 data that follows four principles:\cite{berners2011linked}
 
@@ -278,7 +278,24 @@ data that follows four principles:\cite{berners2011linked}
     information is published on the web.
 \end{enumerate}
 
+It can be seen as a subset of Semantic Web techniques and it builds upon
+the \emph{Resource Description Framework} (RDF)\cite{lassila1999resource},
+which is a general-purpose method for describing and modelling information.
 
+In this chapter, I will outline how web authors are encouraged to publish
+linked data within their content and how that is already used to enhance
+search results in global search engines. I will then introduce how linked
+data may be used within an enterprise setting to reduce traditional
+integration efforts and then touch on some other aspects of the linked
+data domain that could be of interest to the search application.
+
+\section{Publishing Linked Data within Web Pages}
+
+The Semantic Web movement has long recommended an approach of embedding
+RDF data models within web pages and documents using RDFa\cite{adida2012rdfa}
+and RDFa Lite\cite{lite2004rdfa}.
+
+\section{Enhancing Search Engine Results}
 
 \section{Linked Enterprise Data}
 
@@ -302,11 +319,14 @@ enables and enhances social media sharing of the pages.
 
 These efforts are not as structured and rich as the more notable uses
 of semantic web technologies on the programmes microsites, Nature and BBC
-Music \cite{}, but indicate that some level of metadata can be retrieved
+Music \cite{raimond2010use}, but indicate that some level of metadata
+can be retrieved
 as linked data. In cases where the metadata are rich enough, it might be
 possible to avoid direct integration with databases, hidden back end
 web services and other structured ``feeds'' typically set up for enterprise
 integration.
+
+\section{Reasoning and Inference}
 
 \chapter{Analysis}
 
