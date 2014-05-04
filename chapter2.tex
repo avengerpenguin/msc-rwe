@@ -1,0 +1,144 @@
+\chapter{Linked Data}
+\label{stateoftheart}
+
+The concept of Linked Data can well be summarised as a representation of
+data that follows four principles:\cite{berners2011linked}
+
+\begin{enumerate}
+  \item Use URIs to denote things.
+  \item Prefer HTTP URIs (i.e. URLs) so that these things can be looked
+    up (i.e. \emph{dereferenced}.
+  \item When these URIs are dereferenced, provide useful information about
+    those things using standards.
+  \item Include links to other things (using their URIs) when such
+    information is published on the web.
+\end{enumerate}
+
+It can be seen as a subset of Semantic Web techniques and it builds upon
+the \emph{Resource Description Framework} (RDF)\cite{lassila1999resource},
+which is a general-purpose method for describing and modelling information.
+
+In this chapter, I will outline how web authors are encouraged to publish
+linked data within their content and how that is already used to enhance
+search results in global search engines. I will then introduce how linked
+data may be used within an enterprise setting to reduce traditional
+integration efforts and then touch on some other aspects of the linked
+data domain that could be of interest to the search application.
+
+\section{Publishing Linked Data within Web Pages}
+\label{publishing-linked-data}
+
+Whilst there exist multiple formats for publishing RDF purely for machines
+(e.g. Turtle\cite{world2014rdf}, N-Triples, JSON-LD\cite{world2014json},
+N3, RDF/XML) there are multiple ways to embed semantic or linked data within
+an HTML web page:
+
+\begin{itemize}
+  \item RDFa\cite{adida2012rdfa} and RDFa Lite\cite{lite2004rdfa}.
+  \item DC-HTML defines how to embed the Dublin Core vocabulary within HTML
+    meta tags.
+  \item Microdata is an HTML standard that allows annotating existing markup
+    via additional attributes so that it serves as metadata in addition to
+    its purpose as text for humans.
+  \item Microformats are another mechanism that embeds semantic metadata
+    within existing HTML tags and attributes.
+\end{itemize}
+
+Using one or more of these approaches allows a publisher to convey
+machine-readable metadata in the same document that is served to humans.
+This allows, for example, search engines to index more categorical and
+structured information about a page when it is crawled in addition to the
+normal processing on the text content. This was the foundation of the
+Semantic Web\cite{berners2001semantic} before the term Linked Data
+emerged and the aspiration was that widespread adoption would lead to
+a comprehensive ``Web of Data'' to rival the rich, so-called
+``Web of Documents'' that is the World Wide Web as we know it as a collection
+of human-readable pages.
+
+People such as Hepp have argued against adding markup such as RDFa around
+the text visible to humans and instead adding hidden, additional markup to
+contain semantic information.\cite{hepp2009rdf2rdfa} Hepp argues that
+this allows the HTML tree structure to be decoupled from the data structure
+of the vocabulary in use, although it does introduce redundancy if all
+semantic information is duplicated in both human- and machine-readable forms.
+
+Google have seemingly partially adopted an approach following this principle
+-- at least for web authors publishing information about music
+events.\cite{googlejsonld} Google are piloting embedding RDF metadata in
+\emph{JSON-LD} format within HTML \texttt{<script>} tags to add semantic
+information alongside textual data, but without annotating this metadata
+around the textual content itself as we would with RDFa, for example.
+
+All of the above approaches can be found ``in the wild'' in pages across
+the Web with differing rates of adoption. General-purpose web search
+engines can make use of this additional metadata to improve the quality
+of the search results in a number of ways. In section~\ref{enhancing-results},
+I discuss some of these potential improvements.
+
+\section{Enhancing Search Engine Results}
+\label{enhancing-results}
+
+There are at least two key ways in which a search application might
+improve the quality of results by making use of semantic metadata as
+described in section~\ref{publishing-linked-data}.
+
+One approach is to allow
+user queries to be matched against metadata properties in addition
+to the text, perhaps with higher precedence. This may lead to a search
+engine that seems ``intelligent'' enough not just to retrieve articles
+by keywords found therein, but also by keywords that match related
+concepts and properties.
+
+For example, a page about a film might be retrieved
+by matching names of actors that appeared in the film, even if that actor's
+name does not appear in any textual information -- e.g. the synopsis --
+that appears on the page. If the author has published semantic metadata
+within the the film's page to list all the actors and other contributors,
+then our search application can match on this auxiliary information.
+
+Whilst this technique could improve the relevance of the results for a
+given query (and consequently improve the precision of the system for that
+particular query), a second technique known as \emph{Rich Snippets} improves
+results from a usability perspective by aiding users in assessing whether
+a result is relevant or not.
+
+Rich Snippets are a distinct improvement 
+to the user experience and information architecture
+of search applications. A search engine results page (sometimes known as a
+\emph{SERP}) may well retrieve almost all relevant results for a query -- and
+achieve nearly one hundred percent precision -- but this high performance
+is lost on a human user if the results are presented in a form where it is
+hard to determine the respective relevant of each result.
+
+
+
+\section{Linked Enterprise Data}
+
+In recent years, a growing trend has emerged to use
+\emph{Linked Data} in the enterprise to remove the need
+for repeated integration projects or data warehousing.
+\cite{allemang2010semantic} If we view the indexing processes
+of a search application as a variant of data warehousing,
+we can start to argue for enterprise-wide publishing of
+linked data as a more cost effective means of building search
+indexes over bespoke integration efforts.
+
+An important consideration is that BBC Search is largely directing
+users to public pages on the BBC website, a large number of which have
+already published some of their metadata as linked data. Notably, BBC News,
+BBC Sport and BBC Food all use some combination
+of microformats, microdata, RDFa, HTML meta tags within their HTML content
+pages. Some of this was to improve search results in external search engines
+such as Google and some of it ties into Facebook's Open Graph Protocol, which
+enables and enhances social media sharing of the pages.
+
+These efforts are not as structured and rich as the more notable uses
+of semantic web technologies on the programmes microsites, Nature and BBC
+Music \cite{raimond2010use}, but indicate that some level of metadata
+can be retrieved
+as linked data. In cases where the metadata are rich enough, it might be
+possible to avoid direct integration with databases, hidden back end
+web services and other structured ``feeds'' typically set up for enterprise
+integration.
+
+\section{Reasoning and Inference}
