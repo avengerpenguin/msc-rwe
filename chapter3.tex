@@ -122,7 +122,60 @@ require additional integration work if there are further benefits?
 \subsection{The Content}
 
 The front end search application currently divides all the searchable
-content into so-called ``zones'',
+content into so-called ``zones'':
+
+%TODO - is this all of them?
+\begin{itemize}
+  \item About the BBC
+  \item Blogs
+  \item CBBC
+  \item Films
+  \item Food
+  \item Gardening
+  \item Health \& Parenting 
+  \item History
+  \item iPlayer
+  \item Learning
+  \item Local (archive)
+  \item Music
+  \item News
+  \item Ouch!
+  \item Religion \& Ethics
+  \item Science \& Nature
+  \item Sport
+  \item Teenagers
+  \item TV \& Radio Programmes
+  \item TV \& Radio Sites
+\end{itemize}
+
+Some of these zones or categories related to major, well-known areas of
+BBC online. Some seem to be more esoteric or legacy areas, many of which
+are obtained through a web crawler. The presence of ``iPlayer'',
+``TV \& Radio Programmes'' and ``TV & Radio Sites'' is a distinction that
+has arisen for technical and historic reasons, which is not likely to be
+clear to users.
+
+In the rest of this section, I will look at the nature of each category
+of content, how it is currently collected for indexing and note any
+obvious areas that might benefit from an improved approach to indexing.
+
+\subsection{About the BBC}
+
+The ``About the BBC'' category is a collection of subsites centred out
+information about the BBC itself. Audience members can here find information
+about making complaints, press releases, news about the BBC, blogs, etc.
+
+This can be content that users will want to find via the search application.
+The BBC homepage is focused around presented latest online content, but it
+is with these more fringe areas of the BBC website that satisfy specific
+needs (e.g. ``How do I complain about a programme?'') that the
+search application can be of particular use.
+
+There is a mix of static pages and time-based content such as blog posts.
+One advantage of any part of the BBC website that hosts posts or articles,
+is they are generally syndicated via RSS or Atom. This gives an opportunity
+to follow for new updates in the same way the public would without any
+need for bespoke integration work by the teams in charge of the content.
 
 \section{Search Results Page}
 

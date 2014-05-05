@@ -16,4 +16,4 @@ proposal:
 	pdflatex proposal.tex
 
 clean:
-	rm -f *.log *.aux *~
+	rm -f *.log *.aux *~ *.bbl paper-dot2tex-* *.pdf
