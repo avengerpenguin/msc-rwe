@@ -1,8 +1,8 @@
 pdf:
-	pdflatex paper.tex
+	pdflatex --shell-escape paper.tex
 	bibtex paper.aux
-	pdflatex paper.tex
-	pdflatex paper.tex
+	pdflatex --shell-escape paper.tex
+	pdflatex --shell-escape paper.tex
 	@echo "Word counts:"
 	@echo "Chapter 1: `detex chapter1.tex | wc -w`\t/   500"
 	@echo "Chapter 2: `detex chapter2.tex | wc -w`\t/  1500"

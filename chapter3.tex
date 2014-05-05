@@ -1,5 +1,55 @@
 \chapter{Analysis}
 
-In this chapter, I will 
+In this chapter, I will give a deeper analysis of the four
+components of the search application identified in
+chapter~\ref{intro} and start to highlight areas where linked data
+approaches or semantic web technologies could have a r\^ole to play.
 
-\section{}
+\section{Indexing Content}
+
+\subsection{Overview}
+
+The Search application needs to read in or receive metadata about
+BBC content from a variety of sources and then needs to serve
+a diverse set of use cases.\cite{fenning2014applicability} The
+need to integrate against different data sources and funnel
+that information into a common set of search indexes can
+typically be seen as an \emph{enterprise integration}
+problem.
+
+Some of the data is fairly flat, textual content such as articles and some
+information -- such as programmes -- is very structured (e.g. programmes,
+series, episodes, times of broadcast, channel on which they are broadcast,
+what times they are available to watch on iPlayer, what kinds of devices
+are permitted by rights to watch them on iPlayer). There are challenges
+in providing a consistent and meaningful user experience across such
+a heterogeneous mix of content.
+
+We can achieve some uniformity of the data by building a single, common
+API through which all content is fed into the Search application. However,
+some integration work needs to be
+done by either the owners of the content to send content to the API
+or the developers of the Search application, who can integrate
+existing feeds via an adapter pattern.
+
+Some pages on the BBC website no
+longer have a dedicated team maintaining them and can sometimes only
+be discovered via a web crawl as an external search engine would do. A lot
+of metadata about content also lives in a diverse range of databases and
+content management systems, which may or may not be easily retrievable
+via the public web.
+
+\subsection{Current Implementation}
+
+\begin{dot2tex}[neato,options=-tmath]
+digraph G {
+    node [shape="circle"];
+    a_1 -> a_2 -> a_3 -> a_4 -> a_1;
+    }
+\end{dot2tex}
+
+\section{Search Results Page}
+
+\section{Editor's Choice}
+
+\section{Search Suggest}
