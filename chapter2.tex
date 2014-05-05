@@ -134,14 +134,74 @@ working with data models themselves.
 \section{Linked Enterprise Data}
 \label{linked-enterprise-data}
 
+\emph{Enterprise integration} is an important technical field within the
+discipline of Enterprise Architecture that focuses on interconnecting
+systems and allowing data to flow between them. This can be seen as
+the practice of breaking down information silos that naturally emerge
+in enterprise organisations.\cite{allemang2010semantic}
+
+Architectural patterns have been developed, tested and
+implemented in a large number of enterprises to synchronise,
+transform and normalise data. Such patterns are notably
+summarised by Hohpe and Woolf.\cite{hohpe2004enterprise}
+
+There are difficulties with some of these approaches noted by
+Allemang\cite{allemang2010semantic}. Data warehousing,
+integration projects and metadata repositories can all
+be time-consuming to implement, require repeated updating when
+use cases change and at the extreme can be seen as solving the
+problem of too many silos by adding another silo.
+
 In recent years, a growing trend has emerged to use
-\emph{Linked Data} in the enterprise to remove the need
+Linked Data in the enterprise to remove the need
 for repeated integration projects or data warehousing.
-\cite{allemang2010semantic} If we view the indexing processes
+indexes over bespoke integration efforts. This follows from
+a major motivation of Linked Data being that it aids in breaking
+down information silos. \cite{bizer2009linked} In the
+\emph{Linked Enterprise Data} approach, all information
+production remains \emph{distributed} but is
+\emph{connectable}.\cite{allemang2010semantic}
+
+An organisation that seeks to ensure that all information is
+published as Linked Data can learn from examples such as Wikipedia
+-- or indeed the web in general -- where individual experts are
+encouraged to share knowledge rather than keep it in silos. This
+distributed approach recognises that diversity and flux are the
+steady state of an agile enterprise. Two sources that happen
+to use the same vocabulary are instantly interoperable. Two
+sources that use a different vocabulary could well be integrated
+simply by creating appropriate mappings between the vocabularies.
+It should not be necessary to re-engineer a whole dataset nor
+create entirely new systems just for integration.
+
+There are still costs however in additional services, infrastructure
+and training in exposing data as linked data throughout the
+enterprise.\cite{hyland2010preparing} A practical approach
+has been suggested by Davis\cite{davis2011achieving} where enterprises
+can expose data via known formats such as Atom\cite{nottingham2005atom}
+and RESTful web services. Davis argues that the \texttt{atom:link}
+element offers some of the functionality of an RDF triple where
+an entity can be linked to other entities via the \texttt{href}
+attribute and the nature of that relationship is described by
+the \texttt{rel} attribute.
+
+The use of RESTful services and XML formats are very common in
+the enterprise -- noting however that many do not follow all tenets
+of the REST architectural style. This suggests that businesses
+could adopt the pattern suggested by Davis to expose their
+data across the organisation using technologies and techniques
+with which they are likely familiar. This eschews the full power
+of a stack based RDF, OWL and SPARQL, but might be a better
+opportunity for businesses that otherwise would not take on a
+Linked Data approach at all.  Many proponents of Linked Data would
+argue that the important aspect is that the data are exposed and
+linked, however that is achieved.
+
+\begin{comment}
+If we view the indexing processes
 of a search application as a variant of data warehousing,
 we can start to argue for enterprise-wide publishing of
 linked data as a more cost effective means of building search
-indexes over bespoke integration efforts.
 
 An important consideration is that BBC Search is largely directing
 users to public pages on the BBC website, a large number of which have
@@ -160,6 +220,5 @@ as linked data. In cases where the metadata are rich enough, it might be
 possible to avoid direct integration with databases, hidden back end
 web services and other structured ``feeds'' typically set up for enterprise
 integration.
+\end{comment}
 
-\section{Reasoning and Inference}
-\label{reasoning}
