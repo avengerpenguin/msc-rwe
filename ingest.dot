@@ -1,0 +1,30 @@
+digraph ingest {
+  rankdir=LR;
+
+  Programmes -> Dynamite
+  Dynamite -> FileBasedQueues
+
+  News -> CPS
+  Newsround -> CPS
+  Newsbeat -> CPS
+  Sport -> CPS  
+  CPS -> FileBasedQueues
+
+  MarketData -> FileBasedQueues
+
+  trans3 [label="Transformation"]
+  WorldService -> trans3
+  trans3 -> IngestAPI
+  
+  ProgrammesWebsites -> Crawler
+  BBCFood -> Crawler
+  LegacyWebsites -> Crawler
+  trans2 [label="Transformation"]
+  Crawler -> trans2
+  trans2 -> IngestAPI
+
+  IngestAPI -> SearchIndexes
+
+  FileBasedQueues -> Transformation
+  Transformation -> SearchIndexes
+}

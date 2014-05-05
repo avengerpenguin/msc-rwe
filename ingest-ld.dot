@@ -1,0 +1,25 @@
+digraph ingest_ld {
+  rankdir=LR;
+
+  Crawler -> IngestNotification [label="URI"]
+  NewsNotifier -> IngestNotification [label="URI"]
+  SportNotifier -> IngestNotification [label="URI"]
+  ProgrammesNotifier -> IngestNotification [label="URI"]
+
+  IngestNotification -> IngestAPI [label="Stub Graph"]
+  WorldService -> IngestAPI [label="Basic Graph"]
+
+  IngestAPI -> Fetcher [label="If URL given"]
+  IngestAPI -> Enricher [label="If URL not given"]
+
+  Fetcher -> Fetcher [label="Fetch RDFa/microdata from URL"]
+
+  Fetcher -> Enricher
+
+  Enricher -> ExternalSources [label="Fetch more metadata"]
+  ExternalSources -> Enricher [label="more metadata"]
+
+  Enricher -> Reasoner
+
+  Reasoner -> SearchIndexes
+}
