@@ -41,10 +41,26 @@ via the public web.
 
 \subsection{Current Implementation}
 
-\begin{dot2tex}[neato,options=-tmath]
+\begin{dot2tex}[dot,options=-tmath]
 digraph G {
-    node [shape="circle"];
-    a_1 -> a_2 -> a_3 -> a_4 -> a_1;
+  rankdir=LR
+
+    Programmes -> Dynamite
+    News -> CPS
+    Sport -> CPS
+    
+    Dynamiate -> FileQueues
+    CPS -> FileQueues
+
+    FileQueues -> Transformation
+
+    Transformation -> Multicast
+
+    Multicast -> IndexMasters
+
+    IndexMasters -> IndexSlaves
+
+
     }
 \end{dot2tex}
 
