@@ -120,65 +120,88 @@ Google, the search system can at least make use of these efforts and only
 require additional integration work if there are further benefits?
 
 \subsection{The Content}
+\label{content}
 
 The front end search application currently divides all the searchable
-content into so-called ``zones'':
+content into so-called ``zones''. Table~\ref{zones-table}
 
 %TODO - is this all of them?
-\begin{itemize}
-  \item About the BBC
-  \item Blogs
-  \item CBBC
-  \item Films
-  \item Food
-  \item Gardening
-  \item Health \& Parenting 
-  \item History
-  \item iPlayer
-  \item Learning
-  \item Local (archive)
-  \item Music
-  \item News
-  \item Ouch!
-  \item Religion \& Ethics
-  \item Science \& Nature
-  \item Sport
-  \item Teenagers
-  \item TV \& Radio Programmes
-  \item TV \& Radio Sites
-\end{itemize}
+\begin{table}[h]
+\begin{tabular}{| l | l |}
+  Zone/Category          & Notes/Comments \\
+  \hline
+  About the BBC          &  Static pages, blogs, articles. RSS/Atom feeds available. \\
+  Blogs                  &  Legacy blog content. RSS/Atom available. \\
+  CBBC                   &  Pages, games, programmes information for Children. Some semantic markup exists for Facebook's Open Graph. \\
+  Films                  &  Legacy site for BBC Film Network and current site for BBC Films. Little semantic markup. \\
+  Food                   &  Recipes features on BBC programmes. No semantic markup despite sister website BBC Good Food website using Schema.org microdata. \\
+  Gardening              &  Legacy website not updated since 2006. All static HTML content with no semantic markup. \\
+  Health \& Parenting    &  \\
+  History                &  \\
+  iPlayer                &  \\
+  Learning               &  \\
+  Local (archive)        &  \\
+  Music                  &  \\
+  News                   &  \\
+  Ouch!                  &  \\
+  Religion \& Ethics     &  \\
+  Science \& Nature      &  \\
+  Sport                  &  \\
+  Teenagers              &  \\
+  TV \& Radio Programmes &  \\
+  TV \& Radio Sites      &  \\
+\end{tabular}
+\caption{Categories or ``zones'' of content currently indexed by BBC Search.}
+\label{zones-table}
+\end{table}
 
-Some of these zones or categories related to major, well-known areas of
+Some of these zones or categories are related to major, well-known areas of
 BBC online. Some seem to be more esoteric or legacy areas, many of which
 are obtained through a web crawler. The presence of ``iPlayer'',
-``TV \& Radio Programmes'' and ``TV & Radio Sites'' is a distinction that
+``TV \& Radio Programmes'' and ``TV \& Radio Sites'' is a distinction that
 has arisen for technical and historic reasons, which is not likely to be
 clear to users.
 
-In the rest of this section, I will look at the nature of each category
-of content, how it is currently collected for indexing and note any
-obvious areas that might benefit from an improved approach to indexing.
-
-\subsection{About the BBC}
-
-The ``About the BBC'' category is a collection of subsites centred out
-information about the BBC itself. Audience members can here find information
-about making complaints, press releases, news about the BBC, blogs, etc.
-
-This can be content that users will want to find via the search application.
-The BBC homepage is focused around presented latest online content, but it
-is with these more fringe areas of the BBC website that satisfy specific
-needs (e.g. ``How do I complain about a programme?'') that the
-search application can be of particular use.
-
-There is a mix of static pages and time-based content such as blog posts.
-One advantage of any part of the BBC website that hosts posts or articles,
-is they are generally syndicated via RSS or Atom. This gives an opportunity
-to follow for new updates in the same way the public would without any
-need for bespoke integration work by the teams in charge of the content.
+There is a wealth of legacy content that is likely to be obtainable only by
+crawling. Some active sites are syndicated via RSS/Atom, but a subscription-based
+feed does not allow indexing a backfill of content easily.
 
 \section{Search Results Page}
 
+The default results page currently returned for a query breaks the individual
+results into the zones or categories mentioned in section~\ref{content}. A
+navigation menu on the left allows users to drill down into the results just
+for that category.
+
 \section{Editor's Choice}
 
+Each and every link promoted within this feature is hand-chosen by editorial
+staff and much manual effort is needed to keep promoting new concepts
+as they appear and to remove pages as they get superseded. It is hoped
+in this proposal we can reduce some of that manual curation through the use
+of linked data and demonstrate ways editorial staff can focus on curating
+their own linked data such that Editor's Choice could evolve into a more
+generalised and automated subsystem. A metadata-driven curation system
+could use common patterns in the data to promote orders of magnitude more
+top links with a fraction of the current effort.
+
+
 \section{Search Suggest}
+
+The list of suggestions that might surface in this system are
+currently chosen and maintained by hand by editorial staff. If a new
+concept breaks into the news (such as a notable person becoming notable
+for the first time), then a person must enter that term into the system.
+Similarly, if something should not be suggested to users any longer
+(perhaps for legal reasons or simply because it is no longer a relevant
+concept), then it must be amended or removed manually.
+
+This manual maintenance of the suggestion list also leads to a
+disconnect between searchable content and suggested queries that might
+appear as users type. There is an onus on editorial staff to ensure
+that content will be found when a suggested query is used. It might
+serve the website users better to find mechanisms by which to generate
+a useful set of suggestions from the corpus of content as it is
+indexed. The heterogenous nature of BBC content turns this into
+further integration work where different business rules are likely required
+to generate suggestions from different types of content.
