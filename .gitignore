@@ -5,3 +5,5 @@
 *~
 *.bbl
 paper-dot2tex-*
+.venv
+*.toc
