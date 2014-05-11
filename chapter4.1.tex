@@ -1,0 +1,254 @@
+\section{Linked Data Indexing}
+
+The concept of \emph{Linked Enterprise Data} was introduced and described
+in section~\ref{linked-enterprise-data}. In this section, it is proposed
+to endeavour to make use of this approach where possible in the
+ingest and indexing processes of the BBC Search application.
+
+\begin{figure}
+  \begin{center}
+\begin{dot2tex}[dot,scale=0.55]
+digraph ingest {
+  rankdir=TB;
+
+  Programmes [shape=rect,label=iPlayer]
+  News [shape=rect]
+  Newsround [shape=rect]
+  Newsbeat [shape=rect]
+  Sport [shape=rect]
+  MarketData [shape=rect]
+  WorldService [shape=rect]
+  BBCFood [shape=rect]
+  ProgrammesWebsites [shape=rect,label=Programmes]
+  LegacyWebsites [shape=rect,label="Legacy Sites"]
+
+  SearchIndexes [shape=circle]
+
+  Programmes -> URLNotification [label="URLs"]
+
+  News -> CPS
+  Newsround -> CPS
+  Newsbeat -> CPS
+  Sport -> CPS  
+
+  CPS -> URLNotification [label="URLs"]
+
+  URLFetch -> "www.bbc.co.uk" [label="HTTP\ GET"]
+  "www.bbc.co.uk" -> URLFetch [label="RDFa/Microdata"]
+
+  trans3 [label="Transformation"]
+  WorldService -> trans3
+  MarketData -> trans3
+  trans3 -> IngestAPI [label="Atom"]
+  
+  ProgrammesWebsites -> Crawler
+  BBCFood -> Crawler
+  LegacyWebsites -> Crawler
+
+  Crawler -> URLNotification [label="URLs"]
+
+  URLNotification -> URLFetch [label="RDF"]
+
+  URLFetch -> Enrichment [label="RDF"]
+  URLFetch -> Inference [label="RDF"]
+
+  Enrichment -> Inference [label="RDF"]
+
+  Inference -> IngestAPI [label="RDF"]
+
+  IngestAPI -> SearchIndexes
+
+}
+\end{dot2tex}
+  \end{center}
+  \caption{Abstract model of proposed indexing process}
+  \label{led-indexing-chain}
+\end{figure}
+
+An abstract overview of the flow of content is given in figure~\ref{led-indexing-chain}.
+As with the current system depicted in figure~\ref{indexing-chain},
+there remains an ``Ingest'' API to which any system may
+send content to be indexed if it has already been transformed to
+use the semantics required by the search application. This
+ensures that integration work done by other teams continues to work
+and retains the use case where content producers wish to have full
+control of what metadata is sent to the search indexed -- as long as
+they are willing to do the integration work.
+
+Bespoke integration in this way can still suffer from maintainability
+problems that occur when systems are too tightly coupled. Due to this,
+it is architecturally important that the Ingest API continues to follow
+the REST architectural style, making appropriate use of Hypermedia to
+evolve the API's semantics over time whilst not breaking existing clients.
+
+Where this proposal differs from the existing approach is in the case
+of more ``light touch'' integration for teams who are less able or willing
+to do bespoke transformation work and increasing coupling to the search
+APIs. The goal of this part of the proposal is to reduce the integration
+and consequent maintenance work for the search development team.
+
+For these cases, the indexing chain starts from the \emph{URLNotification}
+stage to which messages can be sent in
+\texttt{text/uri-list}\cite{amundsen2011hypermedia} format. It is expected
+that there is some mechanism by which this service can be notified with URLs
+of every piece of content that has been created or updated on the BBC website.
+This might take the form of the search team's own crawler that is seeking
+out pages that have not been found yet or it could be a message-driven
+notification process. It is hoped that whilst it might be demanding to
+put the onus on a team
+to provide transformed content and to integrate against the search system's
+APIs, it is a far lighter piece of work to send simple notifications containing
+a URL.
+
+The URLNotification service can generate a minimal RDF graph and the
+rest of the indexing chain can be seen as a process that incrementally
+augments this graph until it is suitable for indexing and has sufficient
+information to display search results. It is proposed that these minimal
+graphs will take the form of the following example (in JSON-LD serialisation):
+
+\begin{centering}
+\begin{lstlisting}[language=json]
+[
+  {
+    "@id": "http://www.bbc.co.uk/news/technology-27346567",
+    "http://purl.org/dc/terms/identifier": [
+      {
+        "@value": "http://www.bbc.co.uk/news/technology-27346567"
+      }
+    ]
+  }
+]
+\end{lstlisting}
+\end{centering}
+
+This single triple, whilst arguably tautological, can serve as a stub
+for the series of augmentations further downstream. The next stage,
+the \emph{URLFetch} stage, is
+the attempt to add semantic metadata found by dereferencing the URL
+given. This step should retrieve metadata similar to the graphs depicted
+in chapter~\ref{analysis} such as figure~\ref{keepod}. If the identifier
+in the stub RDF graph sent to this stage is a URI, but not a URL, then
+dereferencing is not possible, but the \emph{URLFetch} stage could
+passively send the graph onwards without augmenting to it.
+
+In the URLFetch stage, it might be necessary to apply some web scraping/crawling
+techniques to extract the body of text from articles where appropriate.
+It was identified in the case of figure~\ref{keepod} that BBC News
+was not semantically highlighting the actual text content of the articles, but
+a search application is certainly interested in this information.
+
+The URLFetch service can then send the augmented graph onwards to
+the \emph{Enrichment} service. The purpose of this stage is to apply
+any number of business rules to add further metadata to the graph
+that has not been obtainable via the public website or further upstream. It is
+in this service that the search team is doing more classical
+\emph{enterprise integration} work, which is unavoidable, but confined
+to this one service (or collection of microservices).
+
+In the Enrichment service, we might, for example, contact backend
+service applications for futher data about the content we are trying to ingest.
+This might mean fetching information about a programme from services
+behind BBC iPlayer or contacting content management systems for
+non-published metadata about articles, videos, etc.
+
+Depending on the nature of the data source, this might allow us to start
+making \emph{closed world} assumptions about the properties of content
+items. In section~\ref{programmes}, it was noted that the \emph{open world}
+assumption of linked data would make it difficult to assert negative
+things about the content (e.g. this programme is not available to
+watch on iPlayer). If we know that our RDF graph has been enriched
+with a totality of information \emph{from source}, then it might be
+possible to start making some closed world assumptions with certain predicates.
+
+Following the same pattern as the URLFetch stage, it is valid behaviour
+for the Enrichment service to assess that it is unable to provide
+any useful, additional metadata and to pass the RDF graph further
+downstream untouched. This allows an iterative approach where the first
+version of the service can only enrich from one data source and
+further data sources are added over time. Content items that cannot be
+enriched at the present time can simply pass through unchanged.
+
+The next stage is to run the RDF graph through an \emph{Inference} process.
+This is where custom rules are invoked to handle the different
+vocabularies that might be in use. For example, the rule shown below
+(in N3 format) would allow us to infer that we can
+use \texttt{schema:headline} anywhere we have used \texttt{rnews:headline}
+or \texttt{og:title}.
+
+\begin{centering}
+\begin{lstlisting}[language=ttl]
+@prefix schema: <http://schema.org/> .
+@prefix rnews: <http://iptc.org/std/rNews/2011-10-07#> .
+@prefix og: <http://ogp.me/ns#> .
+
+{ ?x rnews:headline ?y } => { ?x schema:headline ?y } .
+{ ?x og:title       ?y } => { ?x schema:headline ?y } .
+\end{lstlisting}
+\end{centering}
+
+This is useful if the decision is made to use the Schema.org vocabulary as
+the standard within the search indexes and application, but upstream
+content from BBC News is using \texttt{rnews:headline} instead. It is this
+mixed used of vocabularies that was a major driver in historic
+enterprise integration efforts. In bespoke integration applications, explicit
+transformation would be used to translated  ``news item'' to a
+``search item'' including the rule that explicitly extracted the
+\texttt{rnews:headline} property and set it on the \texttt{schema:headline}
+property on the new ``search item'' being created.
+
+In the proposed approach, the RDF model provides a generic framework where
+transformation does not need to occur at any syntactic level and we
+can use resuable inference rules to make more blanket statements such as
+``Where the title has been set for Facebook's Open Graph, use the same
+thing for the title on search results''. This rule can then apply to \emph{all}
+content that uses that property without regard to what ``kind'' of content item
+it is.
+
+This may sound too open to problems where properties are miused in
+unexpected ways and that inferring information in key vocabularies from
+ones used by other systems might allow for ``dirty data'' to appear. Such
+difficulties with the variable quality of linked data on the wider semantic
+web were certainly encountered by Hogan et al.\cite{hogan2011searching} when
+building the SWSE: the Semantic Web Search Engine. It is argued however,
+that these risks are substantially lower for linked enterprise data as
+the domain is far more controlled than the public web. It is also an important
+feature of the web (both the document web and the semantic web) that linking and
+decentralisation bring overall maintainability and interoperability benefits
+that outweigh minor integrity concerns that organisations tradtionally attempt
+to prevent with strict, controlled vocabularies, governance and bespoke
+software integration.
+
+This proposal argues it is more beneficial to take a more agile approach
+of validating some minimum requirements of the information before it
+enters the search indexes themselves. Any content that is not thus
+being accepted can be flagged so that the rules can be amended. For example,
+it might be decided that the \texttt{rnews:headline} property is only
+correctly used by BBC News and other content producers use it incorrectly. In
+this case, we can update our rules as shown below:
+
+\begin{centering}
+\begin{lstlisting}[language=ttl]
+@prefix schema: <http://schema.org/> .
+@prefix rnews: <http://iptc.org/std/rNews/2011-10-07#> .
+@prefix og: <http://ogp.me/ns#> .
+
+{ ?x rnews:headline ?y
+. ?x og:site_name "BBC News" } => { ?x schema:headline ?y } .
+{ ?x og:title             ?y } => { ?x schema:headline ?y } .
+\end{lstlisting}
+\end{centering}
+
+Here we add an additional constraint
+that we only infer the \texttt{schema:headline} property that we might
+ultimately use on the search results page from the \texttt{rnews:headline} if
+the content has a value for \texttt{og:site\_name} that indicates it came
+from BBC News. This can then be iterated on for future rules that define
+different behaviour based on different aspects of the content. These inference
+rules can be as simple or as complex as needed.
+
+It is even possible to have
+completely different sets of rules invoked based on the types of the content
+being indexed. Such an approach should be taken with care so as to prevent
+being overly brittle and coupled to the exact structure of the content. More
+generic rules allow us to add information based on abstract features of the
+metadata that might be present across many ``types'' of content.

@@ -34,9 +34,24 @@ via the public web.
 
 \subsection{Current Implementation}
 
-\begin{dot2tex}[dot,options=-tmath]
+\begin{sidewaysfigure}
+  \begin{center}
+\begin{dot2tex}[dot,scale=0.6]
 digraph ingest {
-  rankdir=LR;
+  rankdir=TB;
+
+  Programmes [shape=rect]
+  News [shape=rect]
+  Newsround [shape=rect]
+  Newsbeat [shape=rect]
+  Sport [shape=rect]
+  MarketData [shape=rect]
+  WorldService [shape=rect]
+  BBCFood [shape=rect]
+  ProgrammesWebsites [shape=rect]
+  LegacyWebsites [shape=rect]
+
+  SearchIndexes [shape=circle]
 
   Programmes -> Dynamite
   Dynamite -> FileBasedQueues
@@ -66,6 +81,10 @@ digraph ingest {
   Transformation -> SearchIndexes
 }
 \end{dot2tex}
+  \end{center}
+  \caption{Abstract model of indexing process}
+  \label{indexing-chain}
+\end{sidewaysfigure}
 
 Figure 1 shows an informal view of the flow of information into the
 search indexes. Note that some content is transformed
@@ -87,7 +106,7 @@ to transform all content found via the Crawler; there is no clear team to
 whom the transformation/integration could be delegated.
 
 It is clear that the search application has the need to normalise vocabularies
-to some extend (e.g. is it ``title'', ``headline'' or ``display title''
+to some extent (e.g. is it ``title'', ``headline'' or ``display title''
 that I should display as the link text on the results page?) and this requires
 some form of transformation. This frames the search application as being a
 key system whose primary r\^ole is to break down all the content silos in the
@@ -119,34 +138,56 @@ The front end search application currently divides all the searchable
 content into so-called ``zones''. Table~\ref{zones-table}
 
 %TODO - is this all of them?
-\begin{table}[h]
-\begin{tabular}{| l | l |}
+\begin{sidewaysfigure}
+  \centering
+\begin{tabular}{| p{5cm} | p{16cm} |}
+  \hline
   Zone/Category          & Notes/Comments \\
   \hline
   About the BBC          &  Static pages, blogs, articles. RSS/Atom feeds available. \\
+  \hline
   Blogs                  &  Legacy blog content. RSS/Atom available. \\
+  \hline
   CBBC                   &  Pages, games, programmes information for Children. Some semantic markup exists for Facebook's Open Graph. \\
+  \hline
   Films                  &  Legacy site for BBC Film Network and current site for BBC Films. Little semantic markup. \\
+  \hline
   Food                   &  Recipes features on BBC programmes. No semantic markup despite sister website BBC Good Food website using Schema.org microdata. \\
+  \hline
   Gardening              &  Legacy website not updated since 2006. All static HTML content with no semantic markup. \\
+  \hline
   Health \& Parenting    &  \\
+  \hline
   History                &  \\
+  \hline
   iPlayer                &  \\
+  \hline
   Learning               &  \\
+  \hline
   Local (archive)        &  \\
+  \hline
   Music                  &  \\
+  \hline
   News                   &  \\
+  \hline
   Ouch!                  &  \\
+  \hline
   Religion \& Ethics     &  \\
+  \hline
   Science \& Nature      &  \\
+  \hline
   Sport                  &  \\
+  \hline
   Teenagers              &  \\
+  \hline
   TV \& Radio Programmes &  \\
+  \hline
   TV \& Radio Sites      &  \\
+  \hline
 \end{tabular}
 \caption{Categories or ``zones'' of content currently indexed by BBC Search.}
 \label{zones-table}
-\end{table}
+\end{sidewaysfigure}
 
 Some of these zones or categories are related to major, well-known areas of
 BBC online. Some seem to be more esoteric or legacy areas, many of which
@@ -160,9 +201,29 @@ crawling. Some active sites are syndicated via RSS/Atom, but a subscription-base
 feed does not allow indexing a backfill of content easily.
 
 \subsection{Programmes}
+\label{programmes}
 
 Figure~\ref{question-time} depicts semantic metadata found within the home page
-of the \emph{Question Time} microsite.
+of the \emph{Question Time} microsite. The CURIE\cite{birbeck2009curie}
+\texttt{bbcprog:b043b2rs} (the prefix \texttt{bbcprog} is used here in place
+of \texttt{http://www.bbc.co.uk/programmes/} for convenience)
+describes the page itself as visited in the
+browser. This home page for Question Time is a destination the search
+application might send a user who has indicated in their query that it
+is likely a page they are looking to find, e.g. if they had simply
+searched for ``question time''.
+
+In this case, this graph of metadata has come not just from microdata
+in the home page, but also by merging it with the alternative RDF/XML
+representation that appears to contain more detailed information.
+It was necessary to have some knowledge of this behaviour of the
+programmes microsites -- that they have multiple representations
+in different media types -- since the microdata in the HTML view
+does not link to the RDF/XML view in any way. Such small bits of
+knowledge and business rules about the BBC's own online content
+is a way a BBC-specific search product can gather information publically-available
+as linked data, but in a more considered way and have advantages over
+public search engines such as Google and Bing.
 
 \begin{sidewaysfigure}
   \begin{center}
@@ -172,4 +233,267 @@ of the \emph{Question Time} microsite.
   \label{question-time}
 \end{sidewaysfigure}
 
+Note the distinction between the identifier for the microsite's
+\emph{page} and the identifier for concept of \emph{Question Time}
+itself. For the latter, the URI
+\texttt{https://www.bbc.co.uk/programmes/b043b2rs\#programme}
+is used.\cite{raimond2010use}
 
+This abstract entity is classified as a \emph{Brand} in the
+Programmes Ontology\cite{raimond2009bbc} (\texttt{po:Brand})
+developed by Raimond et al. in 2009. This and other concepts
+from the Programmes Ontology were also adopted into the
+Schema.org vocabulary in 2013.\cite{raimond2013schema}
+Figure~\ref{question-time} also shows
+that Question Time is thus classified as a \emph{Series}
+(\texttt{schema:Series}). This could cause confusion given
+that there is a Series class also within the Programmes Ontology,
+whose equivalent in Schema.org is a \emph{Season}. This emphasises
+the importance of firmly understanding what vocabulary is in use
+when integrated with a system and having consistent, considered
+mappings between vocabularies where needed.
+
+The Question Time brand has associated metadata that might
+be useful for a search application to display or index. A title
+suitable for displaying is given along with synopses of two
+different lengths, which might form part of a snippet. We are also
+told that the programme falls within \emph{genres} indentified
+by \texttt{bbcprog:genres/factual/politics\#genre} and
+\texttt{bbcprog:genres/news\#genre}. This URI pattern is
+clear enough to a human reader to represent a \emph{Politics}
+subgenre (underneath a \emph{Factual} genre) and a
+\emph{News} genre respectively. However, if we wish to make
+use of this in any applications, the correct approach with
+linked data is to dereference those identifiers to find
+metadata we can display or index.
+
+Following the politics subgenre URL, we can produce the
+semantic representation shown in figure~\ref{politics}.
+An indexing process that follows certain linked entities
+could, for example, index the Question Time home page
+against the keywords ``politics'' or index a film's
+page against the names of actors that appear therein.
+Linked concepts might also drive decorations and controls
+on the search results pages themselves or the search
+application might even be able to provide faceting, filtering
+and aggregation across content that shares common properties.
+
+\begin{sidewaysfigure}
+  \begin{center}
+    \includegraphics[width=\linewidth]{politics.png}
+  \end{center}
+  \caption{Semantic metadata around the \emph{Politics} programme genre}
+  \label{politics}
+\end{sidewaysfigure}
+
+Returning to the semantic view of Question Time in figure~\ref{question-time},
+we can see that the page also describes further entities representing
+a \emph{episodes} with identifiers \texttt{bbcprog:b006t1q9\#programme}
+and \texttt{bbcprog:b04446v3\#programmes}. There are a far greater
+number of episodes linked, but the illustration here is reduced to
+just the two for brevity.
+
+One of the episodes has links to its own page and information
+about how to watch that episode. The graph in figure~\ref{question-time}
+depicts the most recent episode at the time of writing and the
+semantic data given tells us quite a lot about it. We can see
+that there is a linked video (representing as blank node of
+class \texttt{schema:VideoObject}), named ``BBC iPlayer'' with
+a URL (\texttt{schema:url}) of \texttt{http://www.bbc.co.uk/iplayer/episode/b043b2rs}.
+This tells us that we can currently follow that URL to watch
+this episode on BBC iPlayer, which is an example of a useful
+call-to-action that might be placed a search results page where
+a programme is one of the results returned.
+
+We can also see that the time interval in which this is available
+to watch (\texttt{schema:OnDemandEvent}) ends on 8 May, 2015. A
+search application might make use of this to prefer or perhaps
+only show results for programmes that are within this availability
+window. This is the current behaviour for search feature within
+the iPlayer website, but all the availability information is
+obtained via direct integration with service APIs.
+
+The time and date of the next broadcast of this episode is also shown.
+From the graph depicted, we can see there is a (presumably repeat)
+broadcast to occur on Sunday, 11 May 2014 on the BBC Parliament
+channel. Again, this is information that can be displayed within
+search results that might well answer some queries directly
+such as ``When it Question Time next on TV?''. This is similar
+to functionality offered by Google where currency conversions,
+flight times and other quick answers are displayed at the top
+of the results for any query it deems has a straight answer.
+
+Finally, note there is some metadata about the pages themselves
+that are repeated within the Open Graph protocol namespace
+(prefixed with \texttt{og:}). It is common for BBC pages (and
+in fact pages on the web in general) to have embedded Open
+Graph metadata to integrate into Facebook's social graph, even
+when no other semantic markup or metadata are present. Whilst
+the original intention was for Facebook integration, linked
+data technologies will allow us to derive information from
+these properties beyond their intended purpose.
+
+Overall, there are a lot of metadata obtainable about BBC
+programmes via semantic markup available on the public web. There is
+still some information that we cannot obtain:
+
+\begin{itemize}
+  \item We cannot easily gather a list of all identifiers that might
+    be interesting to the search application. Crawling links is
+    popular with web crawlers, but there is no guarantee of finding
+    everything and there are difficulties knowing when to get an
+    updated version of a page when it changes. A BBC-specific
+    search can and arguably should make use of internal integration
+    to discover and update programmes information as it is created,
+    changed or removed.
+  \item BBC iPlayer can display the names of contributors to a programme
+    such as the producers, directors, actors, etc. This information
+    does not appear to be present in the semantic metadata within
+    the programmes microsites.
+  \item Linked Data follows an \emph{Open World} assumption,
+    which means that the lack of fact being asserted does not imply
+    that fact is not true. In our Question Time example above, the
+    fact that Question Time is not asserted to be a comedy does not
+    strictly imply that it is not a comedy.
+\end{itemize}
+
+
+The open world assumption is not always problematic
+if we are positively adding
+decoration, calls-to-action, query matching, etc. based on
+facts we do have and just allow things to be missing when
+the data are insufficient. Problems are introduced, however,
+if we start to make assumptions, for example, that the
+OnDemandEvent time interval being in the past means the
+programme is definitely not available to watch in iPlayer.
+
+In this example, missing off the link to iPlayer might merely
+inconvenience a user who has to click around a bit more to
+find the iPlayer link. If, however, the search application
+chose not to respond with the programme at all under the
+impression it is not available to watch, then there is an
+arguably more broken user experience.
+
+In some situations it may be preferable to integrate against
+a service or data source to get a definitive and \emph{complete}
+answer, i.e. one with which we can make closed world assumptions.
+In other words, if the data source does not tell us a programme
+is available right now to watch on BBC iPlayer, then we can
+strictly and validly infer that it is not available to watch.
+
+The trade-offs between open and closed world assumptions need to
+be kept in mind for any information architecture around the
+search results pages and for any domain modelling for the
+search indexes. Care should be taken around any design element
+or feature that is affected the lack of information. Ideally,
+all behaviour would follow a \emph{progressive enhancement} model
+where additional information can only improve the system's
+behaviour
+and the omission of details or data leads to a \emph{degraded}
+rather than \emph{broken} experience.
+
+The programmes dataset is normally the most structured and
+complex to work with, but is one of the leading uses of
+semantic web technologies on the BBC website as a whole. In
+the rest of this sectio, I will briefly touch on any different
+challenges from other datasets.
+
+\subsection{News}
+
+The semantic metadata that can be found in a BBC News article
+page is notably less complex that a programmes microsite, as
+can be seen in figure~\ref{keepod}.
+
+\begin{sidewaysfigure}
+  \begin{center}
+    \includegraphics[width=\linewidth]{keepod.png}
+  \end{center}
+  \caption{Metadata found within a BBC News article page}
+  \label{keepod}
+\end{sidewaysfigure}
+
+As discusseed in section~\ref{programmes}, BBC News also makes
+use of Facebook's Open Graph metadata and a search application
+could derive information about this article from those properties.
+
+There is also a second vocabulary in use, namely rNews -- an RDFa
+vocabulary developed by the International Press Telecommunications Council
+(IPTC) to annotate online news content.
+
+Note that \texttt{rnews:headline} and \texttt{og:title} agree on
+the title/headline for the article, but \texttt{og:image} and
+\texttt{rnews:thumbnailUrl} point to two different URLs for
+an image to accompany the article. In this case, \texttt{og:image}
+just points to a BBC News logo image and \texttt{rnews:thumbnailUrl}
+shows an image related to the article, albeit only 66 pixels wide
+by 49 pixels high.
+
+So, if we wish to create a search application that shows thumbnails next
+to results, which image is better to use? Can we create general-case
+rules that apply more ``trust'' to one image property over another?
+
+Also, a larger problem is that a semantic extraction on this page
+has not actually given us the article's text content in any way. The
+current BBC Search application uses all text within an article as
+potential keywords so that a user can search for phrases that appear
+anywhere within an article in theory. If we are to extract that text
+for indexing, we encounter all the usual pitfalls of non-semantic
+web crawling and indexing -- e.g. it is not always clear where
+in the HTML the article's ``body'' is (we might accidentally index
+things like the navigation menu) and the crawler needs updating
+if the HTML layout of the page changes.
+
+One significant gap in the semantic markup of BBC News articles is
+the lack of relating the content of the articles to notable entities.
+For instance, any mention of people or places could be captured
+to provide aggregations across those concepts or at least make it
+easier to find an article by typing the names of concepts and things
+mentioned therein.
+
+Annotations of concepts in an article is best done by journalists
+and editors, but can we automate some of the process, at least
+to suggest annotations to use? One approach is to make use of
+DBPedia Spotlight to extract concepts that may be mentioned in
+an article.
+
+\begin{sidewaysfigure}
+  \begin{center}
+    \includegraphics[width=\linewidth]{keepod-tagged.png}
+  \end{center}
+  \caption{BBC News article page's metadata enriched using DBPedia Spotlight}
+  \label{keepod-tagged}
+\end{sidewaysfigure}
+
+A na\"ive first-pass use of DBPedia Spotlight could enrich
+our article's semantic graph to that depicted in figure~\ref{keepod-tagged}.
+Arbitrary values of 10 and 0.25 were used for the \emph{support}
+and \emph{confidence} parameters respectively. These values were
+chosen based on the their returning a small handful of tags, but
+a more considered approach might dynamically adjust these values
+optimised for desired behaviour of the search application.
+
+Automatic tagging with systems such as DBPedia Spotlight is a good
+example of an approach that \emph{can} be taken to enrich
+the metadata, but it is not clear from the analysis so far as to
+whether the search application \emph{should} enrich in this way
+nor what benefits it brings.
+
+One remaining piece of information that is still lacking is
+what News category in which the article falls. The BBC News
+website has business rules around categorising all news
+content -- e.g. \emph{Technology}, \emph{Scotland}, \emph{Education}
+-- but this categorisation seems lacking from the semantic markup. The
+current BBC Search application decorates all news results with
+their respective news category, so an indexing chain using
+the linked data within the news pages alone would need need
+to enrich with that information.
+
+It should not be forgotten that BBC News content dates back to the
+1990s and semantic metadata that can be extracted is going
+to vary greatly in quality. The search application is sometimes
+the only way to navigate to such historic content and any indexing
+work needs to be accepting of this variation over the years.
+
+\subsection{Sport}
+
+%TODO - Finish this

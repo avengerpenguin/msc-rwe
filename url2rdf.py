@@ -19,6 +19,6 @@ g.bind('bbcprog', 'http://www.bbc.co.uk/programmes/')
  for s, p, o in g
  if p == rdflib.URIRef(u'http://www.w3.org/1999/xhtml/vocab#role') or o == rdflib.URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil') ]
 
-#print g.serialize(format='turtle')
+print g.serialize(format='turtle')
 
-print rdf2dot(g, sys.stdout)
+#print rdf2dot(g, sys.stdout)
