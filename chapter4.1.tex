@@ -252,3 +252,13 @@ being indexed. Such an approach should be taken with care so as to prevent
 being overly brittle and coupled to the exact structure of the content. More
 generic rules allow us to add information based on abstract features of the
 metadata that might be present across many ``types'' of content.
+
+The final stage after this inference is to push the RDF graph in
+an appropriate hypermedia type such as JSON-LD to the Ingest API. At this
+point, we should have all required fields/properties for indexing as
+well as other properties that came from upstream sources that will not
+immediately be used. It should be the r\^ole of the Ingest API to perform
+some \emph{contextual validation}\cite{fowler2005contextual} to ensure
+it can be indexed. Ones that cannot be indexed should be stored, but
+not indexed, so there is opportunity to retrieve and repush items through
+the Enrichment and Inference stages again if needed.

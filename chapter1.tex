@@ -3,7 +3,7 @@
 
 This report proposes improvements to the BBC Search product making use
 of \emph{Linked Data}\cite{bizer2009linked} and/or the Semantic
-Web\cite{berners2001semantic}. I hope to be able to demonstrate five tangible
+Web\cite{berners2001semantic}. I hope to be able to demonstrate four tangible
 benefits this domain can bring to a search application, namely:
 
 \begin{enumerate}
@@ -23,9 +23,6 @@ benefits this domain can bring to a search application, namely:
     against a given query and replacing it with curated linked data that
     can provide recommended content against queries in a more general
     manner.
-  \item Replacement of the manual curation of autocomplete suggestions
-    in the \emph{Search Suggest} service -- that suggests full text queries
-    as the user types -- with suggestions driven from linked data.
 \end{enumerate}
 
 In the rest of this chapter, I will give an overview of what role BBC
@@ -158,31 +155,7 @@ ones), but the Editor's Choice links on top of the so-called \emph{organic
 results} can persistently offer links for common use cases such as
 the BBC Weather page for Coventry.
 
-\section{Search Suggest}
-
-One challenge for the querying of a search application is to be tolerant
-of the variable quality of user-entered queries. Many users of web search
-engines may give ambiguously short queries, overly long queries with (where
-it can be hard for a machine to pick out the important keywords amongst
-less important words or stop words\cite{rajaraman2011data})
-or simply use incorrect spelling.
-
-This problem can be ameliorated with a plethora of algorithm
-server-side solutions (e.g. spell checking), but a simple solution that
-can be implemented on the user interface is an \emph{autocomplete}
-or \emph{autosuggest} feature. The former prompts for potential
-queries, titles, names, etc. that they may be typing so as to prevent
-the need to type the query out in full. The latter feature can go
-further to suggest onwards journeys that bypass the need for a
-page of search results altogether.
-
-The search box for BBC Search implements an autocomplete
-feature -- known
-as \emph{Search Suggest} -- whereby
-the full names or titles of are suggested to users as they type the first
-few characters of their queries. This helps guide users into free text
-queries that are more likely to match terms in the indexes and reduces
-mismatching due to misspellings or otherwise poorly-formed queries.
+\section{Summary}
 
 In chapter~\ref{stateoftheart} I will briefly outline some of the state of the
 art in the Linked Data domain and start to highlight areas that show
