@@ -14,31 +14,16 @@ pdf: question-time.png politics.png keepod.png keepod-tagged.png
 	@python -c "print 100 * `detex paper.tex | wc -w` / 10000, '%'"
 	@python -c "print 100 * `detex paper.tex | wc -w` / 15000, '%'"
 
-question-time.png:
+question-time.png: question-time.ttl
 	rapper -i turtle -o dot question-time.ttl | grep -v '.*label="\\n\\nModel.*' | tee question-time.dot | dot -Tpng -o question-time.png
 
-politics.png:
+politics.png: politics.ttl
 	rapper -i turtle -o dot politics.ttl | grep -v '.*label="\\n\\nModel.*' | tee politics.dot | dot -Tpng -o politics.png
 
-hignfy.png:
-	rapper -i turtle -o dot hignfy.ttl | grep -v '.*label="\\n\\nModel.*' | tee hignfy.dot | dot -Tpng -o hignfy.png
-
-trip-to-italy.png:
-	rapper -i turtle -o dot trip-to-italy.ttl | grep -v '.*label="\\n\\nModel.*' | tee trip-to-italy.dot | dot -Tpng -o trip-to-italy.png
-
-doctor-who.png:
-	rapper -i turtle -o dot doctor-who.ttl | grep -v '.*label="\\n\\nModel.*' | tee doctor-who.dot | dot -Tpng -o doctor-who.png
-
-in-the-flesh.png:
-	rapper -i turtle -o dot in-the-flesh.ttl | grep -v '.*label="\\n\\nModel.*' | tee in-the-flesh.dot | dot -Tpng -o in-the-flesh.png
-
-happy-valley.png:
-	rapper -i turtle -o dot happy-valley.ttl | grep -v '.*label="\\n\\nModel.*' | tee happy-valley.dot | dot -Tpng -o happy-valley.png
-
-keepod.png:
+keepod.png: keepod.ttl
 	rapper -i turtle -o dot keepod.ttl | grep -v '.*label="\\n\\nModel.*' | tee keepod.dot | dot -Tpng -o keepod.png
 
-keepod-tagged.png:
+keepod-tagged.png: keepod-tagged.ttl
 	rapper -i turtle -o dot keepod-tagged.ttl | grep -v '.*label="\\n\\nModel.*' | tee keepod-tagged.dot | dot -Tpng -o keepod-tagged.png
 
 #question-time.ttl:
@@ -48,4 +33,4 @@ proposal:
 	pdflatex proposal.tex
 
 clean:
-	rm -f *.log *.aux *~ *.bbl paper-dot2tex-* *.pdf *.png
+	rm -f *.log *.aux *~ *.bbl paper-dot2tex-* *.pdf
