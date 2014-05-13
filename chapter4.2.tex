@@ -1,4 +1,4 @@
-\section{Search Results Page}
+\section{Rich Snippets}
 
 The overall information architecture, design and user experience of
 the results page are out of scope for this proposal, but it is likely
@@ -15,3 +15,19 @@ are introduced to the search application. Ultimately, proposed
 changes to the search results page should ideally be supported
 by valid analysis from a user experience and information
 architecture stance.
+
+One improvement may be to introduce the rich snippets as described
+in section~\ref{enhancing-results}. The work of Haas et
+al.\cite{haas2011enhanced} included adding the snippets in the presentation
+layer by triggering one of a list of plugins that will alter the
+presentation of the data. The indexing process improvements
+described in section~\ref{sec:ld-indexing} should provide the
+additional structured data to drive a series of rich snippet templates
+for different types of content item.
+
+One drawback with creating a template per ``type'' of item is that a
+developer has to create each template individually and also add templates
+and redeploy the application to add a new type when it emerges.
+The RDF model appears to encourage flexibility through
+\emph{schemaless} data structures, which could limit the ability to
+trigger fixed templates on some types of objects.

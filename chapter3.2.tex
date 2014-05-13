@@ -71,8 +71,24 @@ a metadata field known as \emph{media type}. This classifies the content
 into a set of predetermined types and the application uses rules
 along the lines of ``if the media type is \emph{video} then add a play icon''.
 
-This works well enough for programmes, but there are areas where
+This works well for programmes, but there are areas where
 a class-based distinction might not be so clear cut. For example, some articles
 on BBC News are accompanied by a video. Is this item textual or a video?
 The current search application does not apply a play icon because the
 article is classified as textual, as all news story pages are.
+
+The claim was made that there is limited use in semantically annotating
+this metadata as the search application does not \emph{publish} any data
+that is not already published in its respective area of the BBC website.
+However, given the search system has the primary purpose of bringing
+together content across all the BBC (as noted in section~\ref{sec:current-impl}),
+relationships are established and those relationships are metadata.
+For example, if both a BBC Sport article and a BBC News article mention
+the same entity (say, a footballer who has also appeared in the news),
+the search application is going to put those two items in the same aggregation
+(e.g. search results page) even if just by virtue of keyword matching that
+entity's name in both articles.
+
+There is a feature of the current search application where data or metadata
+are more directly published and that is the ``Editor's Choice'' feature. In
+the next section, the nature of that metadata is explored further.
