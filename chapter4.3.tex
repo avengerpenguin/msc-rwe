@@ -9,4 +9,58 @@ could use common patterns in the data to promote orders of magnitude more
 top links with a fraction of the current effort.
 
 Thus the proposal is to maintain a linked data store in parallel
-to the document-oriented search indexes, from which 
+to the document-oriented search indexes, from which entities
+and concepts themselves can be extracted and indexed to supplement
+the search results centred around web pages.
+
+The names or labels for these entities (as identified by
+predicates such as \texttt{rdfs:label}) can be stored in
+a search index distinct to the index of web pages and this
+will enable the query time searching to perform a dual search
+both for \emph{documents} that contain the given keywords,
+but also \emph{things} that seem to match the same query.
+
+This is superficially similar to the current behaviour in that
+queries that match against concepts in a manually-curated
+taxonomy will return so-called ``best links'' stored
+against those concepts. These links then surface in the 
+``Editor's Choice'' section of the search results page.
+
+However, the accumulation of a single, large graph of
+semantic metadata -- initially as a side effect of
+indexing documents as their own distinct RDF graphs --
+will allow this taxonomy to be grown over time without
+manual intervention.
+
+This does not preclude manual guidance and supervision of the
+concepts that should surface in search results pages. In
+the strictest model, the search system can simply suggest
+entities that appear to be significant (e.g. if more
+than a given number of pages and entities link to it) and an
+editorial admin tool will allow approval of which items are
+notable enough to match against queries. A more relaxed
+model might see some entities with a high number of links
+(for example, if a person or organisation rapidly becomes
+famous in the news and is tagged in multiple news articles
+as a result) being automatically included as potential
+search results.
+
+This follows the principles of linked enterprise data outlined in
+section~\ref{linked-enterprise-data} in that staff within
+an enterprise such as editorial staff in the BBC should be
+creating data in a way that is automatically published. This
+means that bespoke applications where the data are stored in
+a database should be replaced over time with systems that
+simply publish their curation as linked information, perhaps
+directly into the search application's triple store.
+
+Editorial staff might publish assertions such as
+``person $X$ is notable for $Y$'' or
+``programme $X$ is a big name brand for the BBC'' and then
+properties such as \texttt{foaf:homepage}\cite{brickley2012foaf} or
+\texttt{po:microsite}\cite{raimond2009bbc} indicate the canonical
+``home pages'' for those entities. The search application can
+then index all entities that have such editorial interest marked
+against them alongside their home pages and provide an
+Editor's Choice feature that uses the combined strengths
+of automated and manual curation.
