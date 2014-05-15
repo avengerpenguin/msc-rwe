@@ -17,8 +17,45 @@ place, so this road map will attempt to keep features as iterative as possible.
 
 \subsection{Fully-Response Search Results Page}
 
-% Information Architecture
-% Link to D. Marland's article
+Whilst there are several improvements for end users due to better
+curation of suggested links and rich snippets, minor improvements
+might best be accompanied with more aesthetic changes to increase
+their impact. Also, it is good practice in \emph{Behaviour Driven Development}
+(BDD) to frame changes in terms of desired behavioural changes from
+the perspective of users of the system. To achieve this, the first
+feature to be addressed will be rebuilding a responsive results
+page in parallel to the existing one.
+
+When the new, responsive page is viable for public use, a switchover
+can happen to move people away from the old page. However, this
+switchover does not need to happen until some of the later features
+have been developed. Whether the new, responsive page is in
+use or not, all features will be defined around improvements to
+it.
+
+David Marland stated that the ``core principle in creating a potentially
+enormous website that will last forever is to get the information
+architecture right in the first place'' in discussion around
+building the responsive programmes microsites.\cite{marland2014responsive}
+Given that
+search is also a potentially enormous website driven by of the
+order of millions of data items, it is fitting to map out the
+information architecture in this first feature and use that to
+drive any domain modelling and vocabularies the search application
+needs to use.
+
+Thus this first feature should include some principles of
+\emph{Domain-driven Design}\cite{evans2004domain}
+in that the search team should identify
+a domain model of the search page, the results that appear therein
+and a common vocabulary that can describe those items even if
+they originated in different systems with differing vocabularies.
+
+A common model across differing BBC content items has been
+attempted\cite{fenning2014applicability} at a high level, but
+for first iterations of this feature, a simplistic model
+such as that shown in figure~\ref{fig:initial-onotology}
+would suffice.
 
 \subsection{Indexing Programmes Microsites}
 
