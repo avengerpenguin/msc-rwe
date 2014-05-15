@@ -1,6 +1,19 @@
-@prefix : <http://example.com/owl/families/> .
+@prefix : <http://www.bbc.co.uk/search/schemas/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+:SearchResult rdf:type    owl:Class .
+:title        rdf:type    owl:DatatypeProperty .
+:synopsis     rdf:type    owl:DatatypeProperty .
+:url          rdf:type    owl:DatatypeProperty .
+
+:title 	      rdfs:domain :SearchResult ;
+       	      rdfs:range  xsd:string .
+
+:synopsis     rdfs:domain :SearchResult ;
+	      rdfs:range  xsd:string .
+
+:url          rdfs:domain :SearchResult ;
+	      rdfs:range  xsd:string .
