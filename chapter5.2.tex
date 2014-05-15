@@ -1,0 +1,68 @@
+\section{Strategy and Technology}
+
+As depicted in figure~\ref{led-indexing-chain}, the architectural
+approach is based around discrete, decoupled, RESTful services
+forming a conceptual pipeline that takes notification of content
+through a process of augmentation, validation and indexing. Recognising
+and exploting Conway's Law\cite{conway1968committees}, a good strategy
+would be to focus subteams on each major area of the application
+(so that the team organisation fits the architecture rather than the
+architecture emerging from the team structure).
+
+Features will cut vertically down the entire technology stack, but
+the individual engineering tasks to implement them can be split
+across subteams focused on each of:
+
+\begin{itemize}
+  \item \textbf{Discovery.} This subteam will focus on the URLNotification
+    and URLFetch services as well as any integration work upstream to
+    generate notifications where such mechanisms do not already exist for certain
+    types of content. Typical considerions will be around RSS/Atom feeds that
+    might notify of new content, message-based notifications from other
+    systems and maintaining a crawler that finds the rest.
+  \item \textbf{Enrichment and Inference.} Here the development team will focus
+    on integration with BBC or external data sources to enrich information
+    coming from the discovery stages. The developers will also need
+    to gain sufficient domain knowledge of each content area to make sound
+    inferences from the enriched metadata that then generate sensible
+    values for fields required by the search indexes.
+  \item \textbf{Ingest.} The Ingest API and the search indexes themselves
+    will be maintained by a subteam responsible for accepting, validating,
+    archiving, indexing and reindexing content. The Ingest API will have
+    not just the enrichment stages as a client, but also any BBC team that
+    wishes to push its data directly to the search system already transformed.
+    Received content will need to be archived in a ``raw'' form so that
+    indexes can be reorganised and rebuilt if their structure need to change. It
+    is also possible that the archived content might be repushed via the
+    enrichment stages to take advantage of new business rules added therein by
+    the previous subteam. There is also much work just around designing the
+    structure of indexes, configuring linguistic matching and otherwise
+    optmising retrieval that it might prove necessary to split out a subteam
+    dedicated to those tasks.
+  \item \textbf{Results Pages.} This is the subteam dedicated to the front
+    end web pages. This is where user experience, design and other front
+    end concerns are a primary focus. It is expected that this subteam
+    will make requirements for the ingest subteam.
+\end{itemize}
+
+The boundaries between subteams do not need to be strict and the team
+itself can still behave as a single team sharing ideas, development practices
+and tooling. The intention here is to have one or two developers that naturally
+gravitate to being responsible for their nominated area so as to encourage
+each area to behave in a decoupled way that is built to tolerate failure of
+other parts of the system.
+
+The loose coupling afforded by linked data and REST should allow these areas
+to evolve independently without changes causes breakages. For example, the
+discovery component should be able to generate more linked data through finding
+new ways of extracting metadata from content without the enrichment stage
+suffering. This in contrast to more brittle RPC-over-HTTP architectures where
+an upstream client sending a new XML or JSON format would cause a service to
+start rejecting the requests unless the service was updated at the same time.
+
+Introducing some devops responsibilities to the individual subteams and
+making use of cloud technology could even permit each subteam to
+develop their respective component(s) in different programming languages or
+with different frameworks since the components only share information
+via HTTP. These are decisions to be made by the developers as they come
+to evaluate the best tools for their respective tasks.

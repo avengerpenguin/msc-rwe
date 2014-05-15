@@ -1,0 +1,58 @@
+\section{Features}
+
+Whilst most of the proposals in chapter~\ref{ch:proposal} were
+technical in nature, most Agile practices encourage phrasing
+improvements in terms of changes a user or stakeholder would see
+and attach some measure of business value to them. Thus the proposed
+improvements around indexing linked data, semantically-driven rich
+snippets and semi-automated editorial curation are expressed as
+the follow tangible improvments:
+
+\begin{itemize}
+
+\item \textbf{A user can always find the microsite for any programme.}
+  This removes the redundancy
+  of crawling programmes microsites and indexing iPlayer as separate categories.
+
+\item \textbf{A user has the choice to click through to iPlayer instead of a programme microsite if that programme has episodes available to watch.}
+  This turns programmes results into richer
+  snippets where a link to iPlayer becomes optional decoration based on whether that information
+  is available. If search does not display the link, but it is actually available to watch, the
+  programme's microsite will still link to iPlayer, simply adding an extra level of indirection. This
+  is arguably preferable to omitting the programme from an ``iPlayer'' category because BBC Search
+  (incorrectly) thinks it is not available to watch on demand.
+
+\item \textbf{Search results for programmes should display when that programme is next broadcast.}
+  This supports the use case where a user is looking for a ``quick answer'' as to when
+  their chosen programme is next broadcast. User testing should contribute to ascertaining how valuable
+  this use case is.
+
+\item \textbf{A programme's microsite should always be the top result.}
+  In a purely-organic search, it
+  is possible that news articles, etc. might contain the same keywords as a programme (e.g. some programm
+  titles are incredibly generic, such as \emph{Today} on BBC Radio 4) and those results might conceivably
+  be scored more highly. The Editor's Choice feature ensures the programme's microsite is always at
+  the top, but with this feature we can migrate the manual curation of these programmes links to
+  the proposed, automated system and reduce the need to manually manage this subset of curated links.
+
+\item \textbf{The search results for CBBC and Knowledge and Learning should be improved.}
+  These are two BBC sites that are actively maintained, but content is currently obtained by
+  the search application via a web crawler. The crawler can be retained for now, but it should
+  be sending the content via the new RDF-based indexing chain laid out in section~\ref{sec:ld-indexing}.
+  This will give the opportunity to extract some semantic data (CBBC at least uses Facebook
+  Open Graph metadata) which is an improvement over using things like the \texttt{<title>} tag. The
+  display of results from these two areas should improve slightly and there may be other sites
+  that can receive these improvements as well.
+
+\item \textbf{The search results page should be fully responsive.} The current search results page
+  is implemented separately for desktop and mobile. A fully-responsive page would modernise
+  the front end, provide opportunities to start incorporating further features around rich snippets
+  and give an aesthetic veneer to the more data-driven improvements that are to come.
+
+\end{itemize}
+
+It should be noted that these are \emph{proposed} features. It is fully expected that
+most will require specific analysis, prototyping or user validation. The presence of a given
+feature on the road map indicates that it will be proven quickly (and fail quickly if it is going to fail)
+as early on in its implementation as possible. The understanding is we are willing
+to throw away ideas that do not ultimately work.
