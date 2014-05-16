@@ -228,7 +228,9 @@ public search engines such as Google and Bing.
 
 \begin{sidewaysfigure}
   \begin{center}
-    \includegraphics[width=\linewidth]{question-time.png}
+    \begin{dot2tex}[dot,pgf,scale=0.25]
+      \input{question-time.dot}
+    \end{dot2tex}
   \end{center}
   \caption{Semantic metadata found within \emph{Question Time} home page}
   \label{question-time}
@@ -281,16 +283,18 @@ and aggregation across content that shares common properties.
 
 \begin{sidewaysfigure}
   \begin{center}
-    \includegraphics[width=\linewidth]{politics.png}
+    \begin{dot2tex}[dot,pgf,scale=0.41]
+      \input{politics.dot}
+    \end{dot2tex}
   \end{center}
   \caption{Semantic metadata around the \emph{Politics} programme genre}
   \label{politics}
 \end{sidewaysfigure}
 
 Returning to the semantic view of Question Time in figure~\ref{question-time},
-we can see that the page also describes further entities representing
-a \emph{episodes} with identifiers \texttt{bbcprog:b006t1q9\#programme}
-and \texttt{bbcprog:b04446v3\#programmes}. There are a far greater
+we can see that the page also describes another entity representing
+an episode \emph{episodes} with identifier \texttt{bbcprog:b006t1q9\#programme}.
+There are a far greater
 number of episodes linked, but the illustration here is reduced to
 just the two for brevity.
 
@@ -407,7 +411,9 @@ can be seen in figure~\ref{keepod}.
 
 \begin{sidewaysfigure}
   \begin{center}
-    \includegraphics[width=\linewidth]{keepod.png}
+    \begin{dot2tex}[dot,pgf,scale=0.41]
+      \input{keepod.dot}
+    \end{dot2tex}
   \end{center}
   \caption{Metadata found within a BBC News article page}
   \label{keepod}
@@ -459,7 +465,9 @@ an article.
 
 \begin{sidewaysfigure}
   \begin{center}
-    \includegraphics[width=\linewidth]{keepod-tagged.png}
+    \begin{dot2tex}[dot,pgf,scale=0.41]
+      \input{keepod-tagged.dot}
+    \end{dot2tex}
   \end{center}
   \caption{BBC News article page's metadata enriched using DBPedia Spotlight}
   \label{keepod-tagged}

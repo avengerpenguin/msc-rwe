@@ -51,13 +51,76 @@ a domain model of the search page, the results that appear therein
 and a common vocabulary that can describe those items even if
 they originated in different systems with differing vocabularies.
 
+\begin{figure}
+  \begin{center}
+    \begin{dot2tex}[dot,pgf,scale=0.41]
+      \input{basic-ontology.dot}
+    \end{dot2tex}
+  \end{center}
+  \caption{Basic ontology modelling the traditional ``title, link, description'' search result}
+  \label{fig:initial-ontology}
+\end{figure}
+
 A common model across differing BBC content items has been
 attempted\cite{fenning2014applicability} at a high level, but
 for first iterations of this feature, a simplistic model
 such as that shown in figure~\ref{fig:initial-onotology}
 would suffice.
 
+The ``Results Page'' subteam can thus focus on initiating
+several iterations of user experience design, user testing
+and development of the results page and it is expected this
+feature will continue to develop in the background as
+other features are worked on by other subteams. It is likely
+individual stories might add to the domain model even
+to make this simple, responsive rebuild of the results page.
+
+The front end application can continue to search the
+existing search indexes independant of any work being done
+to improve the ingest chain. The importance of developing
+this feature first is to ensure the information architecture
+and domain models are defined up front. After this point,
+the other subteams can proceed with the features below
+while the results page developers keep iterating on
+a user interaction that evolves through user testing and
+feedback.
+
 \subsection{Indexing Programmes Microsites}
+
+The ``Ingest'' subteam needs to ensure the Ingest API can
+accept content meeting the basic vocabulary outline in
+figure~\ref{fig:initial-onotologu}, validating ones
+that do not contain the basic fields and evolve the API. If
+the results page developers choose to alter the domain
+model based on design iterations and user feedback, then
+these changes can propogate back as requirements for the
+content ingest.
+
+The team should also evaluate any relevant technologies for the
+search indexes and ensure they are searchable by the
+developers working on the results page.
+
+Elasticsearch is a standalone search server based on Apache Lucene
+that can store, index and retrieve schemaless JSON structures.
+The indexing chain is to deal with RDF graphs, for which JSON-LD
+is a powerful JSON serialisation that can be sent to Elasticsearch
+without any transformation.
+A simple prototype of an ingest function written in Python
+that receives JSON-LD is shown in listing~\ref{lst:ingest}.
+
+\begin{lstlisting}[language=Python]
+from elasticsearch import Elasticsearch
+import json
+
+def ingest_jsonld(jsonld_string):
+  body = {'jsonld': json.loads(jsonld_string)}
+  ElasticSearch().index(index='search', body=body, doc_type='item')
+\label{lst:ingest}
+\end{lstlisting}
+
+The focus for the ingest work should then be around setting
+up mappings in Elasticsearch (if the prototype proves promising)
+to arrange indexes to enable sensible retrieval behaviour.
 
 % PICR
 

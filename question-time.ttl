@@ -48,7 +48,6 @@
 
 bbcprog:b006t1q9 a schema:Series ;
     og:description "Topical debate, with politcal and media figures answering questions from the public"@en-gb ;
-    og:image "http://ichef.bbci.co.uk/images/ic/368x207/p01lcf48.jpg"@en-gb ;
     og:title "Question Time - BBC One"@en-gb ;
     og:url "http://www.bbc.co.uk/programmes/b006t1q9"@en-gb ;
     schema:description "Topical debate in which guests from the worlds of politics and the media answer questions posed by members of the public"@en-gb ;
@@ -75,13 +74,11 @@ bbcprog:b043b2rs a schema:Episode ;
 
 <http://www.bbc.co.uk/programmes/b006t1q9#programme> a po:Brand ;
     dc1:title "Question Time" ;
-    po:episode <http://www.bbc.co.uk/programmes/b043b2rs#programme>,
-        <http://www.bbc.co.uk/programmes/b04446v3#programme> ;
+    po:episode <http://www.bbc.co.uk/programmes/b043b2rs#programme> ;
     po:format <http://www.bbc.co.uk/programmes/formats/discussionandtalk#format> ;
     po:genre <http://www.bbc.co.uk/programmes/genres/factual/politics#genre>,
         <http://www.bbc.co.uk/programmes/genres/news#genre> ;
     po:masterbrand <http://www.bbc.co.uk/bbcone#service> ;
-    po:medium_synopsis "Topical debate in which guests from the worlds of politics and the media answer questions posed by members of the public" ;
     po:short_synopsis "Topical debate, with politcal and media figures answering questions from the public" ;
     foaf:depiction <http://www.bbc.co.uk/iplayer/images/progbrand/b006t1q9_512_288.jpg> .
 
