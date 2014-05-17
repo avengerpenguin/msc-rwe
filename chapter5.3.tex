@@ -67,7 +67,24 @@ for first iterations of this feature, a simplistic model
 such as that shown in figure~\ref{fig:initial-onotology}
 would suffice.
 
-The ``Results Page'' subteam can thus focus on initiating
+There are modelling decisions still to be
+made around whether to use this new vocabulary exclusively
+or attempt to follow an existing one such as Schema.org. The
+World Wide Web Consortium (W3C) usually recommends the practice
+of \emph{extending} existing vocabularies over coining new
+ones, but the linked data model always allows us to publish
+mappings to existing vocabularies. However, small, bespoke
+ontologies are arguably easier to define, control and iterate
+in an agile manner and mappings to existing vocabularies
+can be published later.
+
+For the rest of this implementation plan, it is assumed
+the custom ontology described will be used as replacing it
+with equivalent properties from an existing ontology
+is not a difficult task at the point of implementation.
+
+Once the model is decided,
+the ``Results Page'' subteam can thus focus on initiating
 several iterations of user experience design, user testing
 and development of the results page and it is expected this
 feature will continue to develop in the background as
@@ -86,6 +103,19 @@ a user interaction that evolves through user testing and
 feedback.
 
 \subsection{Indexing Programmes Microsites}
+
+This feature involves replacing all programmes entries in
+the search indexes with linked data sent through the proposed
+indexing chain. The effect for the front end application
+will be to unify the three separate categories for
+programmes content mentioned in section~\ref{sec:search-results-page}.
+
+In the initial iteration, this will take the form of a single
+``Programmes'' category that simply links to microsites
+for different programme entities. Direct linking to iPlayer
+will be lost temporarily, but restored in the next
+feature. Note that users will always be able to reach
+iPlayer via programmes microsites.
 
 The ``Ingest'' subteam needs to ensure the Ingest API can
 accept content meeting the basic vocabulary outline in
@@ -114,7 +144,8 @@ import json
 
 def ingest_jsonld(jsonld_string):
   body = {'jsonld': json.loads(jsonld_string)}
-  ElasticSearch().index(index='search', body=body, doc_type='item')
+  ElasticSearch().index(
+    index='search', body=body, doc_type='item')
 \label{lst:ingest}
 \end{lstlisting}
 
@@ -122,22 +153,172 @@ The focus for the ingest work should then be around setting
 up mappings in Elasticsearch (if the prototype proves promising)
 to arrange indexes to enable sensible retrieval behaviour.
 
-% PICR
+The \emph{Discovery} subteam will need to investigate
+suitable mechanisms for notifying when certain programmes
+objects have changed. There are asynchronous, message-based
+systems in place witin the BBC specifically around
+programmes change notifications and the engineered solution
+is likely to make use of that.
+
+Alongside this work, those responsible for enrichment and
+inference will need to define (and apply) the rules for
+mapping the vocabularies used by programmes microsites
+to the ontology and vocabulary used in the search application.
+Such rules will extend the form introduced in
+section~\ref{sec:ld-indexing}.
 
 \subsection{Linking to iPlayer}
 
-% Expiry of content - recrawl/refetch
+In this feature, direct links to iPlayer are added back into
+search results for programmes.
+
+One difficulty is around
+the temporal nature of programmes information. The graph
+shown back in figure~\ref{question-time} shows
+the time of the next broadcast, but that information will
+soon expire and the search system might be interested in
+reindexing that programme when the nature of its availability
+on BBC iPlayer changes.
+
+It is thus likely that the Discovery subteam working on the
+URLNotification component will need to develop components
+that query an archive of the linked data ingested to look
+for items that may need reingested. They may need to
+place requirements on the Ingest team to store an archive
+of the linked data within a \emph{triple store} or other
+data store (note that Elasticsearch has been known to be
+suitable to act as both a search service and a NoSQL-style
+document store in one). It is then a decision for teh
+engineers as to whether complex SPARQL queries can mine
+for programmes (or indeed any) content that has passed
+a significant point of time at which the information becomes
+out of date or whether to augment the simple ontology
+in figure~\ref{fig:basic-ontology} with the concept of
+a search result's information \emph{expiring} as shown in
+figure~\ref{fig:expiring-ontology}.
+
+\begin{figure}
+  \begin{center}
+    \begin{dot2tex}[dot,pgf,scale=0.41]
+      \input{expiring-ontology.dot}
+    \end{dot2tex}
+  \end{center}
+  \caption{Concept of a potential search result's information expiring has been added}
+  \label{fig:expiring-ontology}
+\end{figure}
+
+This expiry concept is not necessarily that the content item
+should no longer appear in the search indexes, but that the
+information should be considered stale and refetching the data
+is recommended. This is not too far removed from Google
+recrawling pages based on some assessment of how often the page
+should be checked, but here we can use the semantic metadata
+available publicly (and indeed internally) to get a more
+precise idea of a good expiry date.
+
+At this stage, it could
+be proposed to send a notification to the URLNotification
+component a short time after the date and time within the
+value of \emph{any}
+\texttt{http://schema.org/endDate} property has passed. A more
+suitable strategy might emerge as the individual user stories
+within this feature are planned out by the development team.
 
 \subsection{Automatic Curation of Programmes Microsites}
 
-% Editor's Choice - Triplestore
-% Can start to curate other things ahead of time
-% Publishing tool?
+The current Editor's Choice feature links to the top-level
+brand microsite (e.g. the home page for \emph{Question Time})
+for any programme, but generally does not link to the pages
+for specific series/seasons nor individual episodes. This gives
+rise to that idea that something modelled as a potential
+search result in our domain model \emph{may} be a recommended
+result, but not all results have this property. This can
+lead to the next iteration of the domain model/ontology in
+figure~\ref{fig:recommended-ontology}, which introduces a
+property that indicates when a \texttt{:SearchResult}
+can be said to represent a recommended page for any concept.
+For instance, the URI for Question Time as a concept
+will have the recommended page of the microsite about that
+programme.
+
+\begin{figure}
+  \begin{center}
+    \begin{dot2tex}[dot,pgf,scale=0.41]
+      \input{recommended-ontology.dot}
+    \end{dot2tex}
+  \end{center}
+  \caption{Ontology augmented with the concept of a recommended link for an entity}
+  \label{fig:recommended-ontology}
+\end{figure}
+
+The Ingest subteam should then look at maintaining a second
+index of just the names/titles of potential search results
+that are marked as ones that might be recommended. The
+results page front end subteam can then focus on being
+able to query both this new index and the index of documents
+so as to render Editor's Choice and organic search results
+links respectively on a single page.
+
+The API through which the front end web application queries for
+these recommended links can not only expose these recommendations
+as linked data, but also allow an administrative application
+to create, maintain and remove recommendations should there
+be requirements from editorial staff to be able to do so. In this
+case, we should revisit the domain model (i.e. iterate it further)
+to distinguish between, say, \texttt{:automaticRecommendedLink}
+which prompts editorial staff to create a corresponding
+\texttt{:approvedRecommendedLink}. This reflects the typical
+workflows in editorial web tools that traditionally store unmoderated,
+approved, etc. links, but instead encourages through the use of RDF
+to publish this as linked data by default. This again follows the
+principles of linked enterprise data laid out in chapter~\ref{stateoftheart}.
+
+The developers working on inference should gather requirements
+for inferring recommendations from the upstream RDF graphs,
+which in the case of programmes apparently follows from simply
+creating a recommendation for any programme brand to its
+respective ``home page'' or microsite.
 
 \subsection{Improve Results for Crawled Sites}
 
-% CBBC, K&L
+The next feature should address removing configuration for
+some actively-maintained BBC sites -- such as CBBC and
+Knowledge and Learning -- from the existing web crawler
+application and instead push discovered URLs through the new
+RDF-based indexing chain. The developers working on discovery
+should look to push notifications of new, changed and removed
+pages to the URLNotification service, even if they originate
+from a web crawler.
+
+The enrichment components could be extended to fetch additional
+metadata by integrating against backend services that drive
+these sites. Investigations will need to be made around this,
+but any new information that can be added will be an improvement
+over the current way the sites are simply web crawled and scraped.
+
+It is not expected that the domain model should need to change
+significantly, so the ingest and results page applications may not
+need specific changes, but it is expected that the presentation
+of, e.g. the titles, in the search results for these sites will look
+cleaner by properly ascertaining the metadata as opposed to relying
+on web scraping to takes things out of HTML tags (e.g. the \texttt{<title>}
+tag.
+
+This feature is intentionally not specified with as much detail
+as the previous features as agile methodologies usually encourage
+making most decisions when closer to implementation of the feature, at
+which point there may be a lot more information available.
 
 \subsection{Showing Next Broadcast for a Programme}
 
-% More rich snippets
+This is another feature that is not over-specified, but it does
+clearly follow from the ability to add BBC iPlayer links to
+programmes search results that it should be possible to decorate
+those results further with a quick indication of when that
+programme is next broadcast on a TV or radio service.
+
+The information should already be present in the RDF graphs being indexed,
+so this work is theoretically just focused around those developers
+working on the search results web application to generate such
+decoration in the presentation layers based on information that is
+already present in the search indexes.

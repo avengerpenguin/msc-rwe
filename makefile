@@ -1,4 +1,4 @@
-pdf: question-time.dot politics.dot keepod.dot keepod-tagged.dot basic-ontology.dot
+pdf: question-time.dot politics.dot keepod.dot keepod-tagged.dot basic-ontology.dot expiring-ontology.dot
 	pdflatex --shell-escape paper.tex
 	bibtex paper.aux
 	pdflatex --shell-escape paper.tex
@@ -33,6 +33,14 @@ keepod-tagged.dot: keepod-tagged.ttl
 basic-ontology.dot: basic-ontology.ttl
 	rapper -i turtle -o dot basic-ontology.ttl \
 	  | grep -v '.*label="\\n\\nModel.*' >basic-ontology.dot
+
+expiring-ontology.dot: expiring-ontology.ttl
+	rapper -i turtle -o dot expiring-ontology.ttl \
+	  | grep -v '.*label="\\n\\nModel.*' >expiring-ontology.dot
+
+recommended-ontology.dot: recommended-ontology.ttl
+	rapper -i turtle -o dot recommended-ontology.ttl \
+	  | grep -v '.*label="\\n\\nModel.*' >recommended-ontology.dot
 
 #question-time.ttl:
 #	python url2rdf.py "http://www.bbc.co.uk/programmes/b006t1q9" >question-time.ttl
