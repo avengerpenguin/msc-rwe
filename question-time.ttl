@@ -79,7 +79,5 @@ bbcprog:b043b2rs a schema:Episode ;
     po:genre <http://www.bbc.co.uk/programmes/genres/factual/politics#genre>,
         <http://www.bbc.co.uk/programmes/genres/news#genre> ;
     po:masterbrand <http://www.bbc.co.uk/bbcone#service> ;
-    po:short_synopsis "Topical debate, with politcal and media figures answering questions from the public" ;
-    foaf:depiction <http://www.bbc.co.uk/iplayer/images/progbrand/b006t1q9_512_288.jpg> .
-
+    po:short_synopsis "Topical debate, with politcal and media figures answering questions from the public" .
 

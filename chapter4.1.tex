@@ -169,6 +169,16 @@ version of the service can only enrich from one data source and
 further data sources are added over time. Content items that cannot be
 enriched at the present time can simply pass through unchanged.
 
+Whilst the enrichment stage means we have not fully eliminated the
+need for bespoke integration work, the important factor to consider is that
+such integration is no longer \emph{required}. If basic properties
+are sourced upstream from the public web page, then the lack
+of ability to integration -- or if that integration breaks, as brittle,
+coupled integration applications are prone to do -- then the information
+can still be passed through to retain a \emph{degraded} search
+experience. This is preferable to the complete loss of an upstream feed
+due to incompatible changes being made unannounced.
+
 The next stage is to run the RDF graph through an \emph{Inference} process.
 This is where custom rules are invoked to handle the different
 vocabularies that might be in use. For example, the rule shown below

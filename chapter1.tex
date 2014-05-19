@@ -8,28 +8,25 @@ benefits this domain can bring to a search application, namely:
 
 \begin{enumerate}
   \item Further decoupling of BBC applications, which aids scalability,
-    maintainability and resilience in many software architectures.\cite{}
+    maintainability and resilience in many software architectures.
   \item Improvements to the search results page that help users determine
-    if the results given are relevant via so-called
+    if the results given are relevant. The example of this is by using
     \emph{Rich Snippets}\cite{goel2009introducing}
     that can automatically display some semantic information about a given
     result without the need for manual curation.
   \item User experience and design improvements to the search results
     where semantic properties about the results can drive visual decoration
-    and calls to action, which can allow for a more flexible and
-    adaptable design without the need to enumerate all ``kinds'' with
-    different templates.
-  \item Removal of the manual curation of the ``Editor's Choice'' results
+    and calls to action.
+  \item Removal of the exclusively manual curation of the ``Editor's Choice'' results
     against a given query and replacing it with curated linked data that
     can provide recommended content against queries in a more general
     manner.
 \end{enumerate}
 
 In the rest of this chapter, I will give an overview of what role BBC
-Search plays and how we can usefully view the system as four
-distinct subsystems. In later chapters we can then look to improve these
-four separate systems one at a time and then evaluate how these improvements
-might complement each other.
+Search plays and the distinct subsystems that it comprises.
+In later chapters we can then look to improve these systems
+how these improvements might complement each other.
 
 \section{BBC Search}
 
@@ -51,6 +48,8 @@ related to a major, ongoing news theme, curated links can
 link to an overview or FAQ for that ongoing event for those
 looking for the background on it).
 
+\section{Indexing Content}
+
 It is well established that a classical information retrieval system
 can be expressed as two sets of computation: processing of information
 into indexes (also known as \emph{indexing}) for quicker retrieval
@@ -67,15 +66,6 @@ from standalone systems (e.g. a catalogue search situated within
 a library used by a handful of users at once) to web-based
 searches across a far larger corpus with tens or even hundreds of
 users submitting queries in a single second.
-
-In the remaining sections of this chapter, I outline the considerations
-around these two sides of the search application in addition to the
-two complementary systems known as \emph{Editor's Choice} and
-\emph{Search Suggest}.
-
-\section{Indexing Content}
-
-% TODO
 
 \section{Retrieving Content}
 
@@ -105,28 +95,17 @@ relevant to the user's query and recall is the fraction of documents out of
 all possible, relevant documents that appear in the search results.
 
 Note that a system could trivially maximise recall by always returning all
-results, but such a system would perform poorly in terms of precision. A
-measure known as \emph{F-measure} was derived by van Rijsbergen
-\cite{rijsbergen1979information} which
-balances precision recall based on preferring recall over precision $\beta$
-times:
+results, but such a system would perform poorly in terms of precision.
+This makes a search application a delicate balance of trying to show
+users as much of what they want as possible without cluttering the results
+with irrelevant items.
 
-\begin{displaymath}
-  F_\beta = (1 + \beta^2) \cdot \frac{\mathrm{precision} \cdot \mathrm{recall} }{ \beta^2 \cdot \mathrm{precision} + \mathrm{recall}}
-\end{displaymath}
-
-There are other measures such as average precision and average mean precision
-that take into account ordering of results and the average over multiple
-queries respectively. A successful algorithm or third party search engine
-application can be evaluated quantitatively by these measures and more. A more
-qualitative summary from the perspective of the end users could be:
-
-\begin{quote}
-  A successful search application will return only the content the user wants
-  (precision) --
-  as high up the results list as possible -- and as much of desired content
-  as possible (recall).
-\end{quote}
+The task is complicated somewhat further from a user experience perspective
+if an application wishes to attempt to create \emph{serendipity}. The
+concept of serendipity -- showing the user something they were not looking
+for, but turns into a positive onward journey -- is recognised
+as part of the search user experience and is something human-computer
+interaction designers try to aspire to create.\cite{russell2012designing}
 
 The set of all documents that could be retrieved by a query is known as the
 \emph{corpus} and search systems will typically apply a \emph{score} against
@@ -154,10 +133,3 @@ city (since news results are biased towards more recent articles over older
 ones), but the Editor's Choice links on top of the so-called \emph{organic
 results} can persistently offer links for common use cases such as
 the BBC Weather page for Coventry.
-
-\section{Summary}
-
-In chapter~\ref{stateoftheart} I will briefly outline some of the state of the
-art in the Linked Data domain and start to highlight areas that show
-the most promise for improving the four areas of the search application
-described in this chapter.

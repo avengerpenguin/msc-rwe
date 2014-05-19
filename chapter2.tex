@@ -5,16 +5,17 @@ The concept of Linked Data can well be summarised as a representation of
 data that follows four principles:\cite{berners2011linked}
 
 \begin{enumerate}
-  \item Use URIs to denote things.
-  \item Prefer HTTP URIs (i.e. URLs) so that these things can be looked
-    up (i.e. \emph{dereferenced}.
-  \item When these URIs are dereferenced, provide useful information about
-    those things using standards.
-  \item Include links to other things (using their URIs) when such
-    information is published on the web.
+\item Use URIs to denote things, whether pages/documents on the web
+  or real physical and conceptual things in the world.
+\item Prefer HTTP URIs (i.e. URLs) so that they can be looked
+  up (i.e. \emph{dereferenced} to get more information about the thing denoted.
+\item When these URIs are dereferenced, provide useful information about
+  those things using web standards, e.g. RDF, HTML, XML, Turtle.
+\item Include links to other things (using their URIs) when such
+  information is published on the web.
 \end{enumerate}
 
-It can be seen as a subset of Semantic Web techniques and it builds upon
+This overlaps somewhat Semantic Web techniques and it builds upon
 the \emph{Resource Description Framework} (RDF)\cite{lassila1999resource},
 which is a general-purpose method for describing and modelling information.
 
@@ -22,7 +23,7 @@ In this chapter, I will outline how web authors are encouraged to publish
 linked data within their content and how that is already used to enhance
 search results in global search engines. I will then introduce how linked
 data may be used within an enterprise setting to reduce traditional
-integration efforts and then touch on some other aspects of the linked
+integration efforts Finally, I will then touch on some other aspects of the linked
 data domain that could be of interest to the search application.
 
 \section{Publishing Linked Data within Web Pages}
@@ -36,8 +37,9 @@ an HTML web page:
 \begin{itemize}
   \item RDFa\cite{adida2012rdfa} and RDFa Lite\cite{lite2004rdfa}.
   \item DC-HTML defines how to embed the Dublin Core vocabulary within HTML
-    meta tags.
-  \item Microdata is an HTML standard that allows annotating existing markup
+    meta tags.\cite{johnston2008expressing}
+  \item Microdata\cite{htmlstandard} is an HTML standard that allows
+    annotating existing markup
     via additional attributes so that it serves as metadata in addition to
     its purpose as text for humans.
   \item Microformats are another mechanism that embeds semantic metadata
@@ -66,11 +68,12 @@ Google have seemingly partially adopted an approach following this principle
 -- at least for web authors publishing information about music
 events.\cite{googlejsonld} Google are piloting embedding RDF metadata in
 \emph{JSON-LD} format within HTML \texttt{<script>} tags to add semantic
-information alongside textual data, but without annotating this metadata
+information alongside textual data, but without needing to annotate this metadata
 around the textual content itself as we would with RDFa, for example.
 
 All of the above approaches can be found ``in the wild'' in pages across
-the Web with differing rates of adoption. General-purpose web search
+the Web with differing rates of adoption.\cite{haas2011enhanced}
+General-purpose web search
 engines can make use of this additional metadata to improve the quality
 of the search results in a number of ways. In section~\ref{enhancing-results},
 I discuss some of these potential improvements.
@@ -95,6 +98,9 @@ name does not appear in any textual information -- e.g. the synopsis --
 that appears on the page. If the author has published semantic metadata
 within the the film's page to list all the actors and other contributors,
 then our search application can match on this auxiliary information.
+
+This is out of scope for this paper, but
+is recommended as a further study after this proposal has been implemented.
 
 Whilst this technique could improve the relevance of the results for a
 given query (and consequently improve the precision of the system for that
@@ -124,7 +130,7 @@ follow enhanced results.
 
 A higher CTR for semantically-enhanced search results creates some pressure
 and incentive on web publishers to include semantic metadata in their web
-content if they aspire to attacting visitors via global search engines such
+content if they aspire to attracting visitors via global search engines such
 as Google, Bing and Yahoo!.
 
 \section{Linked Enterprise Data}
@@ -153,22 +159,21 @@ Linked Data in the enterprise to remove the need
 for repeated integration projects or data warehousing.
 indexes over bespoke integration efforts. This follows from
 a major motivation of Linked Data being that it aids in breaking
-down information silos.\cite{bizer2009linked} In the
-\emph{Linked Enterprise Data} approach, all information
-production remains \emph{distributed} but is
+down information silos.\cite{bizer2009linked} The key theme
+in the \emph{Linked Enterprise Data} approach is that all information
+production remains \emph{distributed} but becomes
 \emph{connectable}.\cite{allemang2010semantic}
 
-An organisation that seeks to ensure that all information is
-published as Linked Data can learn from examples such as Wikipedia
--- or indeed the web in general -- where individual experts are
-encouraged to share knowledge rather than keep it in silos. This
-distributed approach recognises that diversity and flux are the
-steady state of an agile enterprise. Two sources that happen
-to use the same vocabulary are instantly interoperable. Two
-sources that use a different vocabulary could well be integrated
-simply by creating appropriate mappings between the vocabularies.
-It should not be necessary to re-engineer a whole dataset nor
-create entirely new systems just for integration.
+A distributed
+approach to such publishing across an enterprise keeps data sources
+interoperable, but allows them to develop and grow independantly. This
+recognises that such flux and diversity is the steady state of
+an agile enterprise and shows that attempts to impose a controlled
+data store and vocabulary across the enterprise are doomed to fail.
+Integration of two previously-disconnected data sources is simply
+a matter of creating appropriate vocabulary mappings. It is no
+longer necessarily to build bespoke middleware or rebuild one or
+both data stores.
 
 There are still costs however in additional services, infrastructure
 and training in exposing data as linked data throughout the
@@ -193,7 +198,8 @@ Linked Data approach at all.  Many proponents of Linked Data would
 argue that the important aspect is that the data are exposed and
 linked, however that is achieved.
 
-\begin{comment}
+\section{Linked Data and Search}
+
 If we view the indexing processes
 of a search application as a variant of data warehousing,
 we can start to argue for enterprise-wide publishing of
@@ -216,5 +222,4 @@ as linked data. In cases where the metadata are rich enough, it might be
 possible to avoid direct integration with databases, hidden back end
 web services and other structured ``feeds'' typically set up for enterprise
 integration.
-\end{comment}
 

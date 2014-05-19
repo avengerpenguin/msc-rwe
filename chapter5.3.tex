@@ -53,18 +53,17 @@ they originated in different systems with differing vocabularies.
 
 \begin{figure}
   \begin{center}
-    \begin{dot2tex}[dot,pgf,scale=0.41]
+    \begin{dot2tex}[dot,pgf,scale=0.42,options=-traw]
       \input{basic-ontology.dot}
     \end{dot2tex}
   \end{center}
-  \caption{Basic ontology modelling the traditional ``title, link, description'' search result}
-  \label{fig:initial-ontology}
+  \caption{Basic ontology modelling the traditional ``title, link, description'' search result\label{fig:initial-ontology}}
 \end{figure}
 
 A common model across differing BBC content items has been
 attempted\cite{fenning2014applicability} at a high level, but
 for first iterations of this feature, a simplistic model
-such as that shown in figure~\ref{fig:initial-onotology}
+such as that shown in figure~\ref{fig:initial-ontology}
 would suffice.
 
 There are modelling decisions still to be
@@ -119,7 +118,7 @@ iPlayer via programmes microsites.
 
 The ``Ingest'' subteam needs to ensure the Ingest API can
 accept content meeting the basic vocabulary outline in
-figure~\ref{fig:initial-onotologu}, validating ones
+figure~\ref{fig:initial-ontology}, validating ones
 that do not contain the basic fields and evolve the API. If
 the results page developers choose to alter the domain
 model based on design iterations and user feedback, then
@@ -138,7 +137,7 @@ without any transformation.
 A simple prototype of an ingest function written in Python
 that receives JSON-LD is shown in listing~\ref{lst:ingest}.
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[language=Python,label=lst:ingest]
 from elasticsearch import Elasticsearch
 import json
 
@@ -146,7 +145,6 @@ def ingest_jsonld(jsonld_string):
   body = {'jsonld': json.loads(jsonld_string)}
   ElasticSearch().index(
     index='search', body=body, doc_type='item')
-\label{lst:ingest}
 \end{lstlisting}
 
 The focus for the ingest work should then be around setting
