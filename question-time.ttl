@@ -47,30 +47,30 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 bbcprog:b006t1q9 a schema:Series ;
-    og:description "Topical debate, with politcal and media figures answering questions from the public"@en-gb ;
-    og:title "Question Time - BBC One"@en-gb ;
-    og:url "http://www.bbc.co.uk/programmes/b006t1q9"@en-gb ;
-    schema:description "Topical debate in which guests from the worlds of politics and the media answer questions posed by members of the public"@en-gb ;
-    schema:image "http://ichef.bbci.co.uk/images/ic/480x270/p01lcf48.jpg"@en-gb ;
-    schema:name "Question Time"@en-gb ;
+    og:description "Topical debate, with politcal and media figures answering questions from the public" ;
+    og:title "Question Time - BBC One" ;
+    og:url "http://www.bbc.co.uk/programmes/b006t1q9" ;
+    schema:description "Topical debate in which guests from the worlds of politics…" ;
+    schema:image "http://ichef.bbci.co.uk/images/ic/480x270/p01lcf48.jpg" ;
+    schema:name "Question Time" ;
     foaf:primaryTopic <http://www.bbc.co.uk/programmes/b006t1q9#programme> .
 
 bbcprog:b043b2rs a schema:Episode ;
-    schema:image "http://ichef.bbci.co.uk/images/ic/480x270/p01lcf48.jpg"@en-gb ;
-    schema:name "08/05/2014"@en-gb ;
+    schema:image "http://ichef.bbci.co.uk/images/ic/480x270/p01lcf48.jpg" ;
+    schema:name "08/05/2014" ;
     schema:publication [ a schema:BroadcastEvent ;
-            schema:endDate "2014-05-11T19:00:00+01:00"^^xsd:dateTime ;
+            schema:endDate "2014-05-11T19:00:00+01:00" ;
             schema:publishedOn <http://www.bbc.co.uk/parliament> ;
-            schema:startDate "2014-05-11T18:00:00+01:00"^^xsd:dateTime ],
+            schema:startDate "2014-05-11T18:00:00+01:00" ],
         [ a schema:OnDemandEvent ;
-            schema:endDate "2015-05-08T23:14:00+00:00"^^xsd:dateTime ] ;
+            schema:endDate "2015-05-08T23:14:00+00:00" ] ;
     schema:video [ a schema:VideoObject ;
-            schema:name "BBC iPlayer"@en-gb ;
+            schema:name "BBC iPlayer" ;
             schema:url <http://www.bbc.co.uk/iplayer/episode/b043b2rs> ] ;
     foaf:primaryTopic <http://www.bbc.co.uk/programmes/b043b2rs#programme> .
 
 <http://www.bbc.co.uk/parliament> a schema:BroadcastService ;
-    schema:name "BBC Parliament"@en-gb .
+    schema:name "BBC Parliament" .
 
 <http://www.bbc.co.uk/programmes/b006t1q9#programme> a po:Brand ;
     dc1:title "Question Time" ;

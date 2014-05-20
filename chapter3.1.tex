@@ -18,7 +18,7 @@ are permitted by rights to watch them on iPlayer). There are challenges
 in providing a consistent and meaningful user experience across such
 a heterogeneous mix of content.
 
-We can achieve some uniformity of the data by building a single, common
+Some uniformity of the data is achieved by a single, common
 API through which all content is fed into the Search application. However,
 some integration work needs to be
 done by either the owners of the content to send content to the API
@@ -37,22 +37,39 @@ via the public web.
 
 \begin{sidewaysfigure}
   \begin{center}
-\begin{dot2tex}[dot,scale=0.6]
+\begin{dot2tex}[dot,scale=0.7]
 digraph ingest {
   rankdir=TB;
 
-  Programmes [shape=rect]
-  News [shape=rect]
-  Newsround [shape=rect]
-  Newsbeat [shape=rect]
-  Sport [shape=rect]
-  MarketData [shape=rect]
-  WorldService [shape=rect]
-  BBCFood [shape=rect]
-  ProgrammesWebsites [shape=rect]
-  LegacyWebsites [shape=rect]
+  subgraph cluster_0 {
+    label = "BBC Websites";
+    Programmes [shape=rect]
+    News [shape=rect]
+    Newsround [shape=rect]
+    Newsbeat [shape=rect]
+    Sport [shape=rect]
+    MarketData [shape=rect,label="Market Data"]
+    WorldService [shape=rect,label="World Service"]
+    BBCFood [shape=rect,label="BBC Food"]
+    ProgrammesWebsites [shape=rect,label="Programmes Microsites"]
+    LegacyWebsites [shape=rect,label="Legacy Websites"]
+  }
 
-  SearchIndexes [shape=circle]
+  subgraph cluster_1 {
+    label = "Search Application";
+    FileBasedQueues [label="Message Queues"]
+    IngestAPI [label="Ingest API"]
+    SearchIndexes [shape=circle]
+    Crawler
+    trans2 [label="Transformation"]
+    Transformation
+  }
+
+  subgraph cluster_2 {
+    Dynamite
+    CPS
+    label = "Back-end Services";
+  }
 
   Programmes -> Dynamite
   Dynamite -> FileBasedQueues
@@ -72,7 +89,6 @@ digraph ingest {
   ProgrammesWebsites -> Crawler
   BBCFood -> Crawler
   LegacyWebsites -> Crawler
-  trans2 [label="Transformation"]
   Crawler -> trans2
   trans2 -> IngestAPI
 
@@ -111,10 +127,11 @@ to some extent (e.g. is it ``title'', ``headline'' or ``display title''
 that I should display as the link text on the results page?) and this requires
 some form of transformation. This frames the search application as being a
 key system whose primary r\^ole is to break down all the content silos in the
-BBC, which was noted as a motivation for Linked Data in chapter 2.
+BBC. This aligns with the one of the major motivations of linked data, which
+is to break down content silos within organisations or indeed globally.
 
-There is also an apparent requirement that we are cautious of delegating
-too much integration work to other teams. From the perspective of teams
+It seems there needs to be consideration around balancing the amount of
+integration work delegated to other teams. From the perspective of teams
 whose products produce content, the ideal search system would be
 ``light touch'' and reasonably passive at indexing their content. This
 expectation is strengthened by the long history of public, general-purpose
@@ -136,10 +153,10 @@ require additional integration work if there are further benefits?
 \label{content}
 
 The front end search application currently divides all the searchable
-content into so-called ``zones''. Table~\ref{zones-table}
+content into so-called ``zones''. Table~\ref{zones-table} explains
+each of these categories.
 
-%TODO - is this all of them?
-\begin{sidewaysfigure}
+\begin{sidewaystable}
   \centering
 \begin{tabular}{| p{5cm} | p{16cm} |}
   \hline
@@ -149,7 +166,7 @@ content into so-called ``zones''. Table~\ref{zones-table}
   \hline
   Blogs                  &  Legacy blog content. RSS/Atom available. \\
   \hline
-  CBBC                   &  Pages, games, programmes information for Children. Some semantic markup exists for Facebook's Open Graph. \\
+  CBBC                   &  Pages, games, programmes information for Children. Has semantic markup for Facebook's Open Graph. \\
   \hline
   Films                  &  Legacy site for BBC Film Network and current site for BBC Films. Little semantic markup. \\
   \hline
@@ -157,38 +174,38 @@ content into so-called ``zones''. Table~\ref{zones-table}
   \hline
   Gardening              &  Legacy website not updated since 2006. All static HTML content with no semantic markup. \\
   \hline
-  Health \& Parenting    &  \\
+  Health \& Parenting    &  Websites about health, pregnancy, relationships, etc. Most have been left unchanged for several years and some have in fact been taken down, but entries still exist for the removed pages in the search indexes. \\
   \hline
-  History                &  \\
+  History                &  A mixture of legacy sites relating to history and a revamped History home page until the banner of the new ``Knowledge and Learning'' collection of sites. \\
   \hline
-  iPlayer                &  \\
+  iPlayer                &  On-demand catch-up service for TV and Radio programmes broadcast on the BBC. Videos are traditionally only available for 7 days (this will change to 30 days soon) after broadcast. \\
   \hline
-  Learning               &  \\
+  Learning               &  A vast collection of websites with learning materials for children and adults alike. The content varies from very old pages to maintained ones revamped under the ``Knowledge and Learning'' brand.\\
   \hline
-  Local (archive)        &  \\
+  Local (archive)        &  Legacy pages aimed at different local areas of the UK. Newer content is generally under the remit of BBC News, which has sections for different UK regions and local news therein. \\
   \hline
-  Music                  &  \\
+  Music                  &  Sites about music artists, reviews of albums, BBC orchestras, etc. The artist pages are driven by semantic metadata (e.g. Musicbrainz, DBPedia), but only markup for Facebook's Open Graph occurs in the pages.\\
   \hline
-  News                   &  \\
+  News                   &  News articles published over several years. The quality of the pages and the markup varies with the age of the content, but newer articles contain some semantic markup. \\
   \hline
-  Ouch!                  &  \\
+  Ouch!                  &  Legacy posts for BBC's blog about disability. From April 2013, blogs became part of BBC News, but links to older posts remain in the indexes. \\
   \hline
-  Religion \& Ethics     &  \\
+  Religion \& Ethics     &  Website under the ``Knowledge and Learning'' giving information on religion, culture and traditions. \\
   \hline
-  Science \& Nature      &  \\
+  Science \& Nature      &  Old and new sites including the maintained Nature site, which uses semantic data to generate a lot of the content\cite{raimond2010use}, and the Science site -- another site under the ``Knowledge and Learning'' brand. \\
   \hline
-  Sport                  &  \\
+  Sport                  &  Up-to-date articles and information about sport. BBC Sport some similarities with BBC News in terms of articles, but also has some more quantitative data such as match results and fixture dates. \\
   \hline
-  Teenagers              &  \\
+  Teenagers              &  Legacy ``Switch'' site aimed at teenagers covering music, TV and games. \\
   \hline
-  TV \& Radio Programmes &  \\
+  TV \& Radio Programmes &  Programmes microsites for every programme, individual episodes and additional content such as clips and character information. This content is obtained currently by crawling. \\
   \hline
-  TV \& Radio Sites      &  \\
+  TV \& Radio Sites      &  Crawled ``home'' pages for BBC TV and Radio services with crawled, legacy pages about BBC programmes before the common platform for programmes microsites was developed.\cite{raimond2010use} \\
   \hline
 \end{tabular}
 \caption{Categories or ``zones'' of content currently indexed by BBC Search.}
 \label{zones-table}
-\end{sidewaysfigure}
+\end{sidewaystable}
 
 Some of these zones or categories are related to major, well-known areas of
 BBC online. Some seem to be more esoteric or legacy areas, many of which
@@ -199,7 +216,7 @@ clear to users.
 
 There is a wealth of legacy content that is likely to be obtainable only by
 crawling. Some active sites are syndicated via RSS/Atom, but a subscription-based
-feed does not allow indexing a backfill of content easily.
+feed does not allow indexing a back-fill of content easily.
 
 \subsection{Programmes}
 \label{programmes}
@@ -222,13 +239,13 @@ programmes microsites -- that they have multiple representations
 in different media types -- since the microdata in the HTML view
 does not link to the RDF/XML view in any way. Such small bits of
 knowledge and business rules about the BBC's own online content
-is a way a BBC-specific search product can gather information publically-available
+is a way a BBC-specific search product can gather information publicly-available
 as linked data, but in a more considered way and have advantages over
 public search engines such as Google and Bing.
 
 \begin{sidewaysfigure}
   \begin{center}
-    \begin{tikzpicture}[scale=0.27,transform shape]
+    \begin{tikzpicture}[scale=0.35,transform shape]
     \begin{dot2tex}[dot,pgf,codeonly]
       \input{question-time.dot}
     \end{dot2tex}
@@ -262,17 +279,17 @@ The Question Time brand has associated metadata that might
 be useful for a search application to display or index. A title
 suitable for displaying is given along with synopses of two
 different lengths, which might form part of a snippet. We are also
-told that the programme falls within \emph{genres} indentified
+told that the programme falls within \emph{genres} identified
 by \texttt{bbcprog:genres/factual/politics\#genre} and
 \texttt{bbcprog:genres/news\#genre}. This URI pattern is
 clear enough to a human reader to represent a \emph{Politics}
-subgenre (underneath a \emph{Factual} genre) and a
+sub-genre (underneath a \emph{Factual} genre) and a
 \emph{News} genre respectively. However, if we wish to make
 use of this in any applications, the correct approach with
 linked data is to dereference those identifiers to find
 metadata we can display or index.
 
-Following the politics subgenre URL, we can produce the
+Following the politics sub-genre URL, we can produce the
 semantic representation shown in figure~\ref{politics}.
 An indexing process that follows certain linked entities
 could, for example, index the Question Time home page
@@ -285,9 +302,11 @@ and aggregation across content that shares common properties.
 
 \begin{sidewaysfigure}
   \begin{center}
-    \begin{dot2tex}[dot,pgf,scale=0.41]
+    \begin{tikzpicture}[scale=0.6,transform shape]
+    \begin{dot2tex}[dot,pgf,codeonly]
       \input{politics.dot}
     \end{dot2tex}
+    \end{tikzpicture}
   \end{center}
   \caption{Semantic metadata around the \emph{Politics} programme genre}
   \label{politics}
@@ -321,16 +340,16 @@ the iPlayer website, but all the availability information is
 obtained via direct integration with service APIs.
 
 The time and date of the next broadcast of this episode is also shown.
-From the graph depicted, we can see there is a (presumably repeat)
+From the graph depicted, we can see there is a
 broadcast to occur on Sunday, 11 May 2014 on the BBC Parliament
 channel. Again, this is information that can be displayed within
 search results that might well answer some queries directly
-such as ``When it Question Time next on TV?''. This is similar
+such as ``When is Question Time next on TV?''. This is similar
 to functionality offered by Google where currency conversions,
 flight times and other quick answers are displayed at the top
 of the results for any query it deems has a straight answer.
 
-Finally, note there is some metadata about the pages themselves
+Finally, note there are some metadata about the pages themselves
 that are repeated within the Open Graph protocol namespace
 (prefixed with \texttt{og:}). It is common for BBC pages (and
 in fact pages on the web in general) to have embedded Open
@@ -341,13 +360,14 @@ data technologies will allow us to derive information from
 these properties beyond their intended purpose.
 
 Overall, there are a lot of metadata obtainable about BBC
-programmes via semantic markup available on the public web. There is
+programmes via semantic markup available on the public web.
+However, there is
 still some information that we cannot obtain:
 
 \begin{itemize}
   \item We cannot easily gather a list of all identifiers that might
-    be interesting to the search application. Crawling links is
-    popular with web crawlers, but there is no guarantee of finding
+    be interesting to the search application. Crawling links with
+    web crawlers is one approach, but there is no guarantee of finding
     everything and there are difficulties knowing when to get an
     updated version of a page when it changes. A BBC-specific
     search can and arguably should make use of internal integration
@@ -378,8 +398,8 @@ In this example, missing off the link to iPlayer might merely
 inconvenience a user who has to click around a bit more to
 find the iPlayer link. If, however, the search application
 chose not to respond with the programme at all under the
-impression it is not available to watch, then there is an
-arguably more broken user experience.
+impression it is not available to watch, then there is
+arguably a more broken user experience.
 
 In some situations it may be preferable to integrate against
 a service or data source to get a definitive and \emph{complete}
@@ -392,36 +412,38 @@ The trade-offs between open and closed world assumptions need to
 be kept in mind for any information architecture around the
 search results pages and for any domain modelling for the
 search indexes. Care should be taken around any design element
-or feature that is affected the lack of information. Ideally,
+or feature that is affected by the lack of information. Ideally,
 all behaviour would follow a \emph{progressive enhancement} model
 where additional information can only improve the system's
 behaviour
 and the omission of details or data leads to a \emph{degraded}
 rather than \emph{broken} experience.
 
-The programmes dataset is normally the most structured and
+The programmes data set is normally the most structured and
 complex to work with, but is one of the leading uses of
 semantic web technologies on the BBC website as a whole. In
-the rest of this sectio, I will briefly touch on any different
-challenges from other datasets.
+the rest of this section, I will briefly touch on any different
+challenges from other data sets.
 
 \subsection{News}
 
 The semantic metadata that can be found in a BBC News article
-page is notably less complex that a programmes microsite, as
+page is notably less complex than a programmes microsite, as
 can be seen in figure~\ref{keepod}.
 
 \begin{sidewaysfigure}
   \begin{center}
-    \begin{dot2tex}[dot,pgf,scale=0.41]
+    \begin{tikzpicture}[scale=0.5,transform shape]
+    \begin{dot2tex}[dot,pgf,codeonly]
       \input{keepod.dot}
     \end{dot2tex}
+    \end{tikzpicture}
   \end{center}
   \caption{Metadata found within a BBC News article page}
   \label{keepod}
 \end{sidewaysfigure}
 
-As discusseed in section~\ref{programmes}, BBC News also makes
+As discussed in section~\ref{programmes}, BBC News also makes
 use of Facebook's Open Graph metadata and a search application
 could derive information about this article from those properties.
 
@@ -467,9 +489,11 @@ an article.
 
 \begin{sidewaysfigure}
   \begin{center}
-    \begin{dot2tex}[dot,pgf,scale=0.41]
+    \begin{tikzpicture}[scale=0.41,transform shape]
+    \begin{dot2tex}[dot,pgf,codeonly]
       \input{keepod-tagged.dot}
     \end{dot2tex}
+    \end{tikzpicture}
   \end{center}
   \caption{BBC News article page's metadata enriched using DBPedia Spotlight}
   \label{keepod-tagged}
@@ -490,7 +514,7 @@ whether the search application \emph{should} enrich in this way
 nor what benefits it brings.
 
 One remaining piece of information that is still lacking is
-what News category in which the article falls. The BBC News
+the News category in which the article falls. The BBC News
 website has business rules around categorising all news
 content -- e.g. \emph{Technology}, \emph{Scotland}, \emph{Education}
 -- but this categorisation seems lacking from the semantic markup. The
@@ -507,4 +531,53 @@ work needs to be accepting of this variation over the years.
 
 \subsection{Sport}
 
-%TODO - Finish this
+The BBC Sport website shares a lot with BBC News in that a large
+amount of the content is article-based. However, the sport domain
+has a lot of structured data beneath the surface: atheletes,
+teams, competitions, disciplines, events, etc.
+
+An ontology was defined to drive some automatically aggregated
+pages during the 2012 Olympics\cite{rayfield2011bbc}, but reading
+semantic data from a typical article yields a picture very similar
+to the News story example in figure~\ref{keepod}.
+
+There is a lot of potential for structured data to create an
+intelligent search experience whereby, for example, searching
+for a football team by name would suggest links to the last
+match results, dates of when they are next playing or even
+summarise the current league table for the relevant football
+league. This is something for much later than the proposed
+road map in this paper, but it can be hoped that improvements
+from using linked data in other areas of the BBC can inspire
+some interesting collaboration with the BBC Sport teams.
+
+\subsection{Knowledge and Learning}
+
+The ``Knowledge and Learning'' brand is an attempt to create
+a consistent and cohesive picture of what was a discrete
+collection of sites. Topics search as school curricula, revision
+guides, science, religion, food and history have structured
+domain models behind them, but there are limited semantic data
+within the pages themselves. This means the best option for
+the current search application is to run a web crawler across
+these sites, but there are some efforts to create relevant
+ontologies to drive these sites.
+
+One example is the the \emph{Education} website that has
+a distinct page for every school stage, school subject
+and topic within a subject for all the the UK. These pages
+are driven off a domain model and ontology\cite{bbc2013curriculum}
+behind the scenes
+(i.e. it's not present within the HTML pages), but that
+model has been published under a free licence.
+\cite{bbc2014curriculum} This freely-available data set
+effectively acts as site map of the Education website.
+
+\subsection{Legacy Sites}
+
+With websites that are no longer maintained, there is little choice
+but to run web crawlers over these pages. Further complication
+comes from the fact that certain pages may be taken down
+altogether without the search application necessarily being
+notified, so the crawler has to periodically check on
+pages already indexed to confirm they are still there.

@@ -52,10 +52,10 @@
 <http://www.bbc.co.uk/programmes/b0076wc3#programme> a po:Episode ;
     po:category <http://www.bbc.co.uk/programmes/genres/factual/politics#genre> .
 
-<http://www.bbc.co.uk/programmes/genres/factual/politics> og:image "http://ichef.bbci.co.uk/images/ic/368x207/p01tqv8z.png"@en-gb ;
-    og:site_name "BBC"@en-gb ;
-    og:title " BBC -  Programmes categorised as Factual: Politics "@en-gb ;
-    og:url "http://www.bbc.co.uk/programmes/genres/factual/politics"@en-gb ;
+<http://www.bbc.co.uk/programmes/genres/factual/politics> og:image "http://ichef.bbci.co.uk/images/ic/368x207/p01tqv8z.png" ;
+    og:site_name "BBC" ;
+    og:title " BBC -  Programmes categorised as Factual: Politics " ;
+    og:url "http://www.bbc.co.uk/programmes/genres/factual/politics" ;
     foaf:primaryTopic <http://www.bbc.co.uk/programmes/genres/factual/politics#genre> .
 
 <http://www.bbc.co.uk/programmes/genres/factual/politics#genre> a po:Genre,

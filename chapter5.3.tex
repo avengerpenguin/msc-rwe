@@ -3,13 +3,13 @@
 The BBC Search application differs somewhat from many other sites in that
 the vast majority of the effort, complexity and codebase lives well
 below the HTML/CSS/Javascript surface. The web application side follows
-a typical stack comprising Javascript/CSS interface, server-side code/templates
+a typical stack comprising JavaScript/CSS interface, server-side code/templates
 to render the pages and a data layer (the search indexes). However, it has been
 shown so far that there are orders of magnitude more complexity upstream
 of this data layer, but I hope I have shown that linked data technologies
 will reduce some of the unnecessary complexity at least.
 
-This has implicates for planning features, stories, tasks, etc. within
+This has implications for planning features, stories, tasks, etc. within
 an Agile methodology as the first story to display the most basically
 functionality on a web page can easily lead to a wealth of engineering
 behind the scenes. In this case, there are a lot of systems already in
@@ -53,9 +53,11 @@ they originated in different systems with differing vocabularies.
 
 \begin{figure}
   \begin{center}
-    \begin{dot2tex}[dot,pgf,scale=0.42,options=-traw]
+    \begin{tikzpicture}[scale=0.6,transform shape]
+    \begin{dot2tex}[dot,pgf,codeonly]
       \input{basic-ontology.dot}
     \end{dot2tex}
+    \end{tikzpicture}
   \end{center}
   \caption{Basic ontology modelling the traditional ``title, link, description'' search result\label{fig:initial-ontology}}
 \end{figure}
@@ -72,7 +74,7 @@ or attempt to follow an existing one such as Schema.org. The
 World Wide Web Consortium (W3C) usually recommends the practice
 of \emph{extending} existing vocabularies over coining new
 ones, but the linked data model always allows us to publish
-mappings to existing vocabularies. However, small, bespoke
+mappings to existing vocabularies. Small, bespoke
 ontologies are arguably easier to define, control and iterate
 in an agile manner and mappings to existing vocabularies
 can be published later.
@@ -92,7 +94,7 @@ individual stories might add to the domain model even
 to make this simple, responsive rebuild of the results page.
 
 The front end application can continue to search the
-existing search indexes independant of any work being done
+existing search indexes independent of any work being done
 to improve the ingest chain. The importance of developing
 this feature first is to ensure the information architecture
 and domain models are defined up front. After this point,
@@ -117,12 +119,12 @@ feature. Note that users will always be able to reach
 iPlayer via programmes microsites.
 
 The ``Ingest'' subteam needs to ensure the Ingest API can
-accept content meeting the basic vocabulary outline in
+accept content meeting the basic vocabulary outlined in
 figure~\ref{fig:initial-ontology}, validating ones
-that do not contain the basic fields and evolve the API. If
+that do not contain the basic fields. If
 the results page developers choose to alter the domain
 model based on design iterations and user feedback, then
-these changes can propogate back as requirements for the
+these changes can propagate back as requirements for the
 content ingest.
 
 The team should also evaluate any relevant technologies for the
@@ -130,21 +132,20 @@ search indexes and ensure they are searchable by the
 developers working on the results page.
 
 Elasticsearch is a standalone search server based on Apache Lucene
-that can store, index and retrieve schemaless JSON structures.
+that can store, index and retrieve schema less JSON structures.
 The indexing chain is to deal with RDF graphs, for which JSON-LD
 is a powerful JSON serialisation that can be sent to Elasticsearch
 without any transformation.
 A simple prototype of an ingest function written in Python
 that receives JSON-LD is shown in listing~\ref{lst:ingest}.
 
-\begin{lstlisting}[language=Python,label=lst:ingest]
+\begin{lstlisting}[language=Python,label=lst:ingest,caption=Python code to index JSON-LD strings in Elasticsearch.]
 from elasticsearch import Elasticsearch
 import json
 
 def ingest_jsonld(jsonld_string):
   body = {'jsonld': json.loads(jsonld_string)}
-  ElasticSearch().index(
-    index='search', body=body, doc_type='item')
+  ElasticSearch().index(index='search', body=body)
 \end{lstlisting}
 
 The focus for the ingest work should then be around setting
@@ -154,16 +155,53 @@ to arrange indexes to enable sensible retrieval behaviour.
 The \emph{Discovery} subteam will need to investigate
 suitable mechanisms for notifying when certain programmes
 objects have changed. There are asynchronous, message-based
-systems in place witin the BBC specifically around
+systems in place within the BBC specifically around
 programmes change notifications and the engineered solution
 is likely to make use of that.
+
+The URLFetch component should be able to create an RDF graph
+like that depicted in figure~\ref{question-time} by
+fetching the microsite for the changed programme object
+and parsing any RDFa and/or Microdata. In listing~\ref{lst:rdfa},
+we can see this is achieved quite succinctly with the
+RDFLib library's built-in support for metadata embedded within
+HTML documents. The function takes any RDF graph (e.g. the minimal
+graph shown in listing~\ref{lst:minimal}), attempts to look up
+all subjects by their URI and adds any RDF metadata found.
+
+\begin{lstlisting}[language=Python,label=lst:rdfa,caption=Use of RDFLib to deference all subjects in upstream graph far and add any linked data found.]
+def fetch_metadata_about_subjects(graph):
+  for subject in graph.subjects():
+    graph.parse(str(subject))
+\end{lstlisting}
 
 Alongside this work, those responsible for enrichment and
 inference will need to define (and apply) the rules for
 mapping the vocabularies used by programmes microsites
 to the ontology and vocabulary used in the search application.
-Such rules will extend the form introduced in
-section~\ref{sec:ld-indexing}.
+Such rules will extend the examples introduced in
+section~\ref{sec:ld-indexing}. A simple function that
+uses \emph{RDFLib} and \emph{FuXi} Python libraries to infer
+properties using a given rule set is shown in listing~\ref{lst:infer}.
+
+\begin{lstlisting}[language=Python,label=lst:infer,caption=Python code to expand an RDFLib Graph with inferred properties using FuXi.]
+from rdflib import Graph
+from FuXi.Rete.RuleStore import SetupRuleStore
+from FuXi.Rete.Util import generateTokenSet
+from FuXi.Horn.HornRules import HornFromN3
+
+def apply_inference_rules(graph, ruleset):
+  rule_store, rule_graph, network \
+    = SetupRuleStore(makeNetwork=True)
+  closure_delta = Graph()
+  network.inferredFacts = closure_delta
+  for rule in HornFromN3(ruleset):
+    network.buildNetworkFromClause(rule)
+
+  network.feedFactsToAdd(generateTokenSet(graph))
+
+  return graph + closure_delta
+\end{lstlisting}
 
 \subsection{Linking to iPlayer}
 
@@ -175,31 +213,33 @@ the temporal nature of programmes information. The graph
 shown back in figure~\ref{question-time} shows
 the time of the next broadcast, but that information will
 soon expire and the search system might be interested in
-reindexing that programme when the nature of its availability
+re-indexing that programme when the nature of its availability
 on BBC iPlayer changes.
 
 It is thus likely that the Discovery subteam working on the
 URLNotification component will need to develop components
 that query an archive of the linked data ingested to look
-for items that may need reingested. They may need to
+for items that may need re-ingested. They may need to
 place requirements on the Ingest team to store an archive
 of the linked data within a \emph{triple store} or other
 data store (note that Elasticsearch has been known to be
 suitable to act as both a search service and a NoSQL-style
-document store in one). It is then a decision for teh
+document store in one). It is then a decision for the
 engineers as to whether complex SPARQL queries can mine
 for programmes (or indeed any) content that has passed
 a significant point of time at which the information becomes
 out of date or whether to augment the simple ontology
-in figure~\ref{fig:basic-ontology} with the concept of
+in figure~\ref{fig:initial-ontology} with the concept of
 a search result's information \emph{expiring} as shown in
 figure~\ref{fig:expiring-ontology}.
 
-\begin{figure}
+\begin{figure}[t]
   \begin{center}
-    \begin{dot2tex}[dot,pgf,scale=0.41]
+    \begin{tikzpicture}[scale=0.6,transform shape]
+    \begin{dot2tex}[dot,pgf,codeonly]
       \input{expiring-ontology.dot}
     \end{dot2tex}
+    \end{tikzpicture}
   \end{center}
   \caption{Concept of a potential search result's information expiring has been added}
   \label{fig:expiring-ontology}
@@ -207,9 +247,9 @@ figure~\ref{fig:expiring-ontology}.
 
 This expiry concept is not necessarily that the content item
 should no longer appear in the search indexes, but that the
-information should be considered stale and refetching the data
+information should be considered stale and re-fetching the data
 is recommended. This is not too far removed from Google
-recrawling pages based on some assessment of how often the page
+re-crawling pages based on some assessment of how often the page
 should be checked, but here we can use the semantic metadata
 available publicly (and indeed internally) to get a more
 precise idea of a good expiry date.
@@ -239,11 +279,13 @@ For instance, the URI for Question Time as a concept
 will have the recommended page of the microsite about that
 programme.
 
-\begin{figure}
+\begin{figure}[t]
   \begin{center}
-    \begin{dot2tex}[dot,pgf,scale=0.41]
+    \begin{tikzpicture}[scale=0.6,transform shape]
+    \begin{dot2tex}[dot,pgf,codeonly]
       \input{recommended-ontology.dot}
     \end{dot2tex}
+    \end{tikzpicture}
   \end{center}
   \caption{Ontology augmented with the concept of a recommended link for an entity}
   \label{fig:recommended-ontology}
@@ -289,7 +331,7 @@ pages to the URLNotification service, even if they originate
 from a web crawler.
 
 The enrichment components could be extended to fetch additional
-metadata by integrating against backend services that drive
+metadata by integrating against back-end services that drive
 these sites. Investigations will need to be made around this,
 but any new information that can be added will be an improvement
 over the current way the sites are simply web crawled and scraped.

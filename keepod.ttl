@@ -41,15 +41,15 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://www.bbc.co.uk/news/technology-27346567> a rnews:NewsItem ;
-    rnews:creator "http://www.bbc.co.uk#org"@en-gb ;
-    rnews:datePublished "2014/05/09 20:54:22"@en-gb ;
-    rnews:description "An Israeli start-up is trying to provide computer access to billions of the world's poorest people with a $7 USB stick."@en-gb ;
-    rnews:headline "Can a $7 gadget change the world?"@en-gb ;
-    rnews:thumbnailUrl "http://news.bbcimg.co.uk/media/images/74758000/jpg/_74758445_keepod.jpg"@en-gb ;
-    og:image "http://newsimg.bbc.co.uk/media/images/67373000/jpg/_67373987_09f1654a-e583-4b5f-bfc4-f05850c6d3ce.jpg"@en-gb ;
-    og:site_name "BBC News"@en-gb ;
-    og:title "Can a $7 gadget change the world?"@en-gb ;
-    og:type "article"@en-gb ;
-    og:url "http://www.bbc.co.uk/news/technology-27346567"@en-gb .
+    rnews:creator "http://www.bbc.co.uk#org" ;
+    rnews:datePublished "2014/05/09 20:54:22" ;
+    rnews:description "An Israeli start-up is trying to provide computer access to billions of the world's poorest people with a $7 USB stick." ;
+    rnews:headline "Can a $7 gadget change the world?" ;
+    rnews:thumbnailUrl "http://news.bbcimg.co.uk/media/images/74758000/jpg/_74758445_keepod.jpg" ;
+    og:image "http://newsimg.bbc.co.uk/media/images/67373000/jpg/_67373987_09f1654a-e583-4b5f-bfc4-f05850c6d3ce.jpg" ;
+    og:site_name "BBC News" ;
+    og:title "Can a $7 gadget change the world?" ;
+    og:type "article" ;
+    og:url "http://www.bbc.co.uk/news/technology-27346567" .
 
 

@@ -6,16 +6,16 @@ data that follows four principles:\cite{berners2011linked}
 
 \begin{enumerate}
 \item Use URIs to denote things, whether pages/documents on the web
-  or real physical and conceptual things in the world.
+  or real, physical and conceptual things in the world.
 \item Prefer HTTP URIs (i.e. URLs) so that they can be looked
-  up (i.e. \emph{dereferenced} to get more information about the thing denoted.
+  up (i.e. \emph{dereferenced}) to get more information about the thing denoted.
 \item When these URIs are dereferenced, provide useful information about
   those things using web standards, e.g. RDF, HTML, XML, Turtle.
 \item Include links to other things (using their URIs) when such
   information is published on the web.
 \end{enumerate}
 
-This overlaps somewhat Semantic Web techniques and it builds upon
+This overlaps somewhat with Semantic Web techniques and it builds upon
 the \emph{Resource Description Framework} (RDF)\cite{lassila1999resource},
 which is a general-purpose method for describing and modelling information.
 
@@ -54,7 +54,7 @@ normal processing on the text content. This was the foundation of the
 Semantic Web\cite{berners2001semantic} before the term Linked Data
 emerged and the aspiration was that widespread adoption would lead to
 a comprehensive ``Web of Data'' to rival the rich, so-called
-``Web of Documents'' that is the World Wide Web as we know it as a collection
+``Web of Documents'' that is the World Wide Web as we know it -- a collection
 of human-readable pages.
 
 People such as Hepp have argued against adding markup such as RDFa around
@@ -76,7 +76,7 @@ the Web with differing rates of adoption.\cite{haas2011enhanced}
 General-purpose web search
 engines can make use of this additional metadata to improve the quality
 of the search results in a number of ways. In section~\ref{enhancing-results},
-I discuss some of these potential improvements.
+some of these potential improvements are discussed.
 
 \section{Enhancing Search Engine Results}
 \label{enhancing-results}
@@ -122,7 +122,7 @@ Haas et al.\cite{haas2011enhanced} at Microsoft and Yahoo! research. The
 results showed a promising preference from 84\% of users for a result
 with enhanced information with the most common downside being that the
 snippet may sometimes present incorrect information (e.g. showing the wrong
-price for a product is less preferable than simply not attempting to present
+price for a product is less preferable to simply not attempting to present
 the price at all). Implicit feedback via click-through rates (CTR) --
 a common metric to indicate that users are happy enough with the information
 given to click on the link given -- suggested users were more likely to
@@ -136,8 +136,8 @@ as Google, Bing and Yahoo!.
 \section{Linked Enterprise Data}
 \label{linked-enterprise-data}
 
-\emph{Enterprise integration} is an important technical field within the
-discipline of Enterprise Architecture that focuses on interconnecting
+\emph{Enterprise Integration} is an important technical field within the
+discipline of \emph{Enterprise Architecture} that focuses on interconnecting
 systems and allowing data to flow between them. This can be seen as
 the practice of breaking down information silos that naturally emerge
 in enterprise organisations.\cite{allemang2010semantic}
@@ -147,7 +147,7 @@ implemented in a large number of enterprises to synchronise,
 transform and normalise data. Such patterns are notably
 summarised by Hohpe and Woolf.\cite{hohpe2004enterprise}
 
-There are difficulties with some of these approaches noted by
+However, There are difficulties with some of these approaches -- as noted by
 Allemang\cite{allemang2010semantic}. Data warehousing,
 integration projects and metadata repositories can all
 be time-consuming to implement, require repeated updating when
@@ -204,6 +204,7 @@ If we view the indexing processes
 of a search application as a variant of data warehousing,
 we can start to argue for enterprise-wide publishing of
 linked data as a more cost effective means of building search
+indexes that bring together all published content.
 
 An important consideration is that BBC Search is largely directing
 users to public pages on the BBC website, a large number of which have

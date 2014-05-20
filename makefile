@@ -1,4 +1,4 @@
-pdf: question-time.dot politics.dot keepod.dot keepod-tagged.dot basic-ontology.dot expiring-ontology.dot
+pdf: question-time.dot politics.dot keepod.dot keepod-tagged.dot basic-ontology.dot expiring-ontology.dot recommended-ontology.dot
 	pdflatex --shell-escape paper.tex
 	bibtex paper.aux
 	pdflatex --shell-escape paper.tex
